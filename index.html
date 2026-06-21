@@ -1,312 +1,55 @@
 <!DOCTYPE html>
+<!-- LPagesAppLabs Platform v1.0 · Services · contact@lpagesapplabs.com -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="color-scheme" content="dark">
   <title>LPagesAppLabs Services — Landing Pages, Websites & Mobile Apps</title>
   <meta name="description" content="Custom landing pages, business websites, secure web infrastructure and mobile apps built for clients. Fast delivery, security-first, mobile-first.">
   <meta name="robots" content="index, follow">
-  <link rel="icon" href="https://lpagesapplabs.com/favicon.ico" sizes="any">
   <link rel="icon" href="https://lpagesapplabs.com/logo.svg" type="image/svg+xml">
   <link rel="canonical" href="https://services.lpagesapplabs.com/" />
   <meta property="og:title" content="LPagesAppLabs Services — Landing Pages, Websites & Mobile Apps" />
   <meta property="og:description" content="Custom landing pages, business websites, secure web infrastructure and mobile apps built for clients." />
   <meta property="og:url" content="https://services.lpagesapplabs.com/" />
+  <meta property="og:image" content="https://lpagesapplabs.com/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:type" content="website" />
-  <link rel="preconnect" href="https://fonts.bunny.net">
-  <link href="https://fonts.bunny.net/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0F172A; --bg2: #111827;
-      --surface: #1E293B; --surface2: #162032;
-      --emerald: #10B981; --emerald-dim: #059669;
-      --emerald-glow: rgba(16,185,129,0.15);
-      --emerald-glow2: rgba(16,185,129,0.07);
-      --cyan: #22D3EE;
-      --white: #F8FAFC; --muted: #94A3B8;
-      --border: rgba(16,185,129,0.18);
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="LPagesAppLabs Services — Landing Pages, Websites & Mobile Apps" />
+  <meta name="twitter:description" content="Custom landing pages, business websites, secure web infrastructure and mobile apps built for clients." />
+  <meta name="twitter:image" content="https://lpagesapplabs.com/og-image.png" />
+  <meta name="theme-color" content="#0F172A">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "LPagesAppLabs",
+    "url": "https://services.lpagesapplabs.com",
+    "description": "Static websites, landing pages, and mobile apps built privacy-first with zero trackers and strict security headers.",
+    "email": "contact@lpagesapplabs.com",
+    "founder": { "@type": "Person", "name": "D.Badi" },
+    "areaServed": "EU",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Web & Mobile Services",
+      "itemListElement": [
+        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Landing Pages"}},
+        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Business Websites"}},
+        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Secure Web Infrastructure"}},
+        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Mobile Apps"}}
+      ]
     }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg); color: var(--white);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 16px; line-height: 1.7; overflow-x: hidden;
-    }
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 0; opacity: 0.4;
-    }
-    section { position: relative; z-index: 1; }
-
-    /* NAV */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.25rem 5%;
-      background: rgba(15,23,42,0.88);
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-logo {
-      font-family: 'Syne', sans-serif; font-weight: 800;
-      font-size: 1.05rem; letter-spacing: 0.05em;
-      text-decoration: none; display: flex; align-items: center; gap: 0.5rem;
-      color: var(--white);
-    }
-    .nav-logo .lp { color: var(--cyan); }
-    .nav-logo .rest { color: var(--emerald); }
-    .nav-platform {
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      color: var(--muted); text-decoration: none;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      border: 1px solid var(--border); padding: 0.35rem 0.8rem;
-      border-radius: 6px; transition: all 0.2s;
-    }
-    .nav-platform:hover { color: var(--cyan); border-color: rgba(34,211,238,0.3); }
-    .nav-links { display: flex; gap: 2rem; align-items: center; }
-    .nav-links a {
-      font-family: 'DM Mono', monospace; font-size: 0.75rem;
-      color: var(--muted); text-decoration: none;
-      letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--emerald); }
-    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
-    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--muted); border-radius: 2px; transition: all 0.2s; }
-    .nav-mobile { display: none; flex-direction: column; gap: 0; background: rgba(15,23,42,0.97); border-top: 1px solid var(--border); padding: 1rem 5%; }
-    .nav-mobile a { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); transition: color 0.2s; }
-    .nav-mobile a:last-child { border-bottom: none; }
-    .nav-mobile a:hover { color: var(--emerald); }
-    .nav-mobile.open { display: flex; }
-
-    /* HERO */
-    #hero {
-      min-height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center; padding: 10rem 5% 6rem; overflow: hidden;
-    }
-    .hero-glow {
-      position: absolute; width: 700px; height: 700px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(16,185,129,0.11) 0%, transparent 70%);
-      top: 50%; left: 50%; transform: translate(-50%, -50%);
-      pointer-events: none; animation: pulse-glow 6s ease-in-out infinite;
-    }
-    @keyframes pulse-glow {
-      0%, 100% { opacity: 0.7; transform: translate(-50%,-50%) scale(1); }
-      50% { opacity: 1; transform: translate(-50%,-50%) scale(1.08); }
-    }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--emerald); background: var(--emerald-glow2);
-      border: 1px solid var(--border);
-      padding: 0.4rem 1rem; border-radius: 999px;
-      margin-bottom: 2rem; animation: fadeUp 0.6s ease both;
-    }
-    .badge-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--emerald); animation: blink 2s ease infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-    h1 {
-      font-family: 'Syne', sans-serif; font-weight: 800;
-      font-size: clamp(2rem, 4.5vw, 3.4rem);
-      line-height: 1.2; letter-spacing: -0.02em;
-      margin-bottom: 1.5rem; animation: fadeUp 0.7s 0.1s ease both;
-    }
-    h1 .accent { color: var(--emerald); }
-    .hero-sub {
-      font-size: clamp(1rem, 2vw, 1.15rem); color: var(--muted);
-      max-width: 520px; margin: 0 auto 2.8rem; font-weight: 300;
-      animation: fadeUp 0.7s 0.2s ease both;
-    }
-    .btn-group {
-      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
-      animation: fadeUp 0.7s 0.3s ease both;
-    }
-    .btn {
-      display: inline-flex; align-items: center; gap: 0.6rem;
-      padding: 0.85rem 1.8rem; border-radius: 8px;
-      font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
-      font-weight: 500; text-decoration: none; cursor: pointer; transition: all 0.2s;
-    }
-    .btn-primary { background: var(--emerald); color: #0F172A; border: none; }
-    .btn-primary:hover { background: #0ea472; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(16,185,129,0.35); }
-    .btn-secondary { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.15); }
-    .btn-secondary:hover { border-color: var(--emerald); color: var(--emerald); transform: translateY(-2px); }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* SECTION COMMON */
-    .section-label {
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--emerald); margin-bottom: 1rem;
-    }
-    .section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      font-weight: 700; line-height: 1.2; margin-bottom: 1rem;
-    }
-
-    /* SERVICES */
-    #services {
-      padding: 7rem 5%;
-      background: var(--surface2);
-      border-top: 1px solid var(--border);
-    }
-    .services-header { text-align: center; margin-bottom: 3.5rem; }
-    .services-header p { color: var(--muted); font-size: 1rem; max-width: 500px; margin: 0 auto; }
-    .svc-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.25rem; max-width: 1100px; margin: 0 auto;
-    }
-    .svc-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; padding: 2rem;
-      transition: all 0.25s;
-    }
-    .svc-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.5); border-color: rgba(16,185,129,0.38); }
-    .svc-icon { font-size: 2rem; margin-bottom: 1rem; }
-    .svc-title { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .svc-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
-
-    /* WHY US */
-    #why {
-      padding: 7rem 5%;
-    }
-    .why-inner { max-width: 1100px; margin: 0 auto; }
-    .why-header { text-align: center; margin-bottom: 3.5rem; }
-    .why-header p { color: var(--muted); font-size: 1rem; max-width: 480px; margin: 0.5rem auto 0; }
-    .why-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-    }
-    .why-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 1.5rem;
-      display: flex; gap: 1rem; align-items: flex-start;
-    }
-    .why-icon {
-      font-size: 1.4rem; flex-shrink: 0;
-      width: 44px; height: 44px; border-radius: 10px;
-      background: var(--emerald-glow2); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .why-text .why-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
-    .why-text p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
-
-    /* WORK */
-    #work {
-      padding: 7rem 5%;
-      background: var(--surface2);
-      border-top: 1px solid var(--border);
-    }
-    .work-inner { max-width: 800px; margin: 0 auto; }
-    .work-header { text-align: center; margin-bottom: 3rem; }
-    .work-header p { color: var(--muted); font-size: 1rem; margin-top: 0.5rem; }
-    .work-card {
-      background: var(--surface); border: 1px solid rgba(16,185,129,0.38);
-      border-radius: 14px; padding: 2rem 2.5rem;
-      display: flex; align-items: center; gap: 2rem;
-      text-decoration: none; color: inherit;
-      transition: all 0.25s; position: relative; overflow: hidden;
-    }
-    .work-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--emerald), transparent);
-    }
-    .work-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.5); }
-    .work-card img { width: 64px; height: 64px; border-radius: 14px; flex-shrink: 0; }
-    .work-info .work-tag {
-      display: inline-block; font-size: 0.65rem; letter-spacing: 0.1em;
-      text-transform: uppercase; padding: 0.2rem 0.65rem;
-      border-radius: 4px; margin-bottom: 0.6rem; font-weight: 500;
-      background: rgba(16,185,129,0.15); color: var(--emerald); border: 1px solid rgba(16,185,129,0.3);
-    }
-    .work-info .work-name { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.3rem; }
-    .work-info .work-domain { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); margin-bottom: 0.6rem; }
-    .work-info .work-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
-    .work-arrow { margin-left: auto; font-size: 1.2rem; color: var(--muted); opacity: 0.5; flex-shrink: 0; }
-
-    /* CONTACT */
-    #contact {
-      padding: 7rem 5%;
-      text-align: center;
-    }
-    .contact-inner { max-width: 560px; margin: 0 auto; }
-    .contact-inner p { color: var(--muted); font-size: 1rem; margin: 1rem 0 2.5rem; }
-    .contact-box {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; padding: 2.5rem;
-    }
-    .contact-box p { color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
-    .contact-email {
-      display: inline-block;
-      font-family: 'DM Mono', monospace; font-size: 0.95rem;
-      color: var(--emerald); text-decoration: none;
-      padding: 0.5rem 1rem;
-      border: 1px solid var(--border); border-radius: 6px;
-      transition: border-color 0.2s;
-    }
-    .contact-email:hover { border-color: var(--emerald); }
-
-    /* FOOTER */
-    footer {
-      padding: 2.5rem 5%;
-      border-top: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 1rem; position: relative; z-index: 1;
-    }
-    .footer-logo {
-      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.95rem;
-      text-decoration: none; display: flex; align-items: center; gap: 0.4rem;
-    }
-    .footer-logo .lp { color: var(--cyan); }
-    .footer-logo .rest { color: var(--emerald); }
-    .footer-links { display: flex; gap: 1.8rem; flex-wrap: wrap; }
-    .footer-links a {
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--muted); text-decoration: none; transition: color 0.2s;
-    }
-    .footer-links a:hover { color: var(--emerald); }
-    .footer-copy { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); opacity: 0.5; }
-
-    /* SCROLL REVEAL */
-    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
-    .reveal.visible { opacity: 1; transform: none; }
-
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .nav-hamburger { display: flex; }
-      #hero { padding: 7rem 5% 4rem; }
-      h1 { font-size: clamp(1.8rem, 7vw, 2.5rem); }
-      .btn-group { flex-direction: column; align-items: center; }
-      .btn { width: 100%; max-width: 280px; justify-content: center; }
-      #services { padding: 4rem 5%; }
-      .svc-grid { grid-template-columns: 1fr; }
-      #why { padding: 4rem 5%; }
-      .why-grid { grid-template-columns: 1fr; }
-      #work { padding: 4rem 5%; }
-      .work-card { flex-direction: column; text-align: center; }
-      .work-arrow { display: none; }
-      #contact { padding: 4rem 5%; }
-      footer { flex-direction: column; text-align: center; align-items: center; }
-      .footer-links { justify-content: center; gap: 1rem; }
-    }
-  </style>
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link href="https://fonts.bunny.net/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
 <nav>
   <a href="#hero" class="nav-logo">
@@ -314,32 +57,36 @@
   </a>
   <div class="nav-links">
     <a href="#services">Services</a>
+    <a href="#templates">Templates</a>
     <a href="#why">Why Us</a>
-    <a href="#work">Our Work</a>
+    <a href="#work">Portfolio</a>
     <a href="#contact">Contact</a>
-    <a href="https://lpagesapplabs.com" class="nav-platform">← Platform</a>
+    <a href="https://lpagesapplabs.com" class="nav-platform" rel="noopener noreferrer">← Platform</a>
   </div>
-  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="navMobile">
     <span></span><span></span><span></span>
   </button>
 </nav>
 <div class="nav-mobile" id="navMobile">
-  <a href="#services" onclick="closeMenu()">Services</a>
-  <a href="#why" onclick="closeMenu()">Why Us</a>
-  <a href="#work" onclick="closeMenu()">Our Work</a>
-  <a href="#contact" onclick="closeMenu()">Contact</a>
-  <a href="https://lpagesapplabs.com" onclick="closeMenu()">← Platform</a>
+  <a href="#services">Services</a>
+  <a href="#templates">Templates</a>
+  <a href="#why">Why Us</a>
+  <a href="#work">Portfolio</a>
+  <a href="#contact">Contact</a>
+  <a href="https://lpagesapplabs.com" rel="noopener noreferrer">← Platform</a>
 </div>
 
+<main id="main-content">
 <!-- HERO -->
 <section id="hero">
   <div class="hero-glow"></div>
-  <div class="hero-badge"><span class="badge-dot"></span> Open for new projects · 2026</div>
-  <h1>We Build <span class="accent">Fast, Secure</span><br>Websites & Apps</h1>
-  <p class="hero-sub">Custom landing pages, business websites, and mobile applications — delivered with a security-first approach.</p>
+  <div class="hero-badge"><span class="badge-dot"></span> Open for new projects</div>
+  <h1>Built Clean.<br><span class="accent">Privacy-First.</span> No Exceptions.</h1>
+  <p class="hero-sub">Static websites and mobile apps with zero trackers, GDPR-clean architecture, and strict security headers from the first deploy — not bolted on after the fact.</p>
   <div class="btn-group">
     <a href="#contact" class="btn btn-primary">Get a Free Quote</a>
-    <a href="#services" class="btn btn-secondary">See What We Build</a>
+    <a href="#templates" class="btn btn-secondary">Browse Templates</a>
+    <a href="#work" class="btn btn-secondary">See Our Work</a>
   </div>
 </section>
 
@@ -352,25 +99,186 @@
   </div>
   <div class="svc-grid">
     <div class="svc-card reveal">
-      <div class="svc-icon">🚀</div>
+      <div class="svc-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
       <div class="svc-title">Landing Pages</div>
-      <div class="svc-desc">High-converting, fast, mobile-first landing pages for products, apps, and campaigns. Designed to turn visitors into customers.</div>
+      <div class="svc-desc">Fast, static landing pages for product launches, app releases, and campaigns. No CMS, no backend, no plugin to expire. Loads in under a second and stays up for years without maintenance.</div>
     </div>
     <div class="svc-card reveal">
-      <div class="svc-icon">🏗️</div>
+      <div class="svc-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
       <div class="svc-title">Business Websites</div>
-      <div class="svc-desc">Full business websites with modern design, clean code, and easy content management. Built to grow with your business.</div>
+      <div class="svc-desc">Multi-page sites for professional services, restaurants, studios, and shops. Static HTML, email-based contact, strict security headers from the first deploy. No subscription required after handoff.</div>
     </div>
     <div class="svc-card reveal">
-      <div class="svc-icon">🔒</div>
-      <div class="svc-title">Secure Web Infrastructure</div>
-      <div class="svc-desc">Security headers (CSP, HSTS, X-Frame-Options, Permissions-Policy), static-first hosting with no unnecessary server attack surface, GDPR-compliant architecture with zero tracking by default, dependency auditing in CI, and subdomain isolation. Every decision is deliberate — not bolted on after the fact.</div>
+      <div class="svc-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+      <div class="svc-title">Infrastructure & Security</div>
+      <div class="svc-desc">End-to-end security for web and physical environments. Web: strict security headers, hardened hosting, GDPR-clean architecture, zero tracking by default. Network: LAN/WAN setup, firewall configuration, VPN deployment, network segmentation, and access control. Hardware: server setup and hardening, device management, and monitoring. Everything designed to reduce attack surface — not patched on after the fact.</div>
     </div>
     <div class="svc-card reveal">
-      <div class="svc-icon">📲</div>
+      <div class="svc-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="18" r="1" fill="#10B981" stroke="none"/></svg></div>
       <div class="svc-title">Mobile Apps</div>
       <div class="svc-desc">iOS & Android application development, from design to deployment on App Store and Google Play. Native experience, cross-platform efficiency.</div>
     </div>
+  </div>
+  <div class="svc-templates-cta reveal">
+    <a href="#templates" class="svc-templates-link">Browse 11 ready-to-quote templates ↓</a>
+  </div>
+</section>
+
+<!-- TEMPLATES -->
+<section id="templates">
+  <div class="work-inner">
+    <div class="work-header reveal">
+      <div class="section-label">11 Templates · Pick Your Brief</div>
+      <h2 class="section-title">Templates</h2>
+      <p>Pick the closest match to your project — each template lists the stack, what you get, and how long delivery takes. We scope and quote from there.</p>
+    </div>
+
+    <div class="work-divider"><span class="work-divider-label">// landing pages</span></div>
+
+    <div class="work-card reveal" data-accent="violet">
+      <div class="work-mono">L</div>
+      <div class="work-info">
+        <div class="work-tag">Template · Product Launch</div>
+        <div class="work-name">Launchpad</div>
+        <div class="work-domain">Pre-launch capture page · Any product or service</div>
+        <div class="work-desc">A single static page: hero, feature teasers, email capture form that sends to your inbox, optional countdown. Zero trackers, no CMS, loads in under a second. The page lives as long as the launch takes — months if needed — without maintenance. Visitors who subscribe before launch prove market interest before you ship anything.</div>
+        <div class="work-stack"><span>Static HTML/CSS</span><span>Email capture</span><span>Countdown timer</span><span>Cloudflare Pages</span></div>
+        <div class="work-timeline">// Timeline confirmed on quote</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="amber">
+      <div class="work-mono">A</div>
+      <div class="work-info">
+        <div class="work-tag">Template · Mobile App Download</div>
+        <div class="work-name">AppPage</div>
+        <div class="work-domain">iOS &amp; Android download page · Mobile apps</div>
+        <div class="work-desc">Detects the visitor's device and shows the correct store button first; desktop gets both. Feature overview, screenshots, support email link. No tracking pixel, no analytics SDK, no cookies — a fast page that gets out of the way and lets the app speak for itself. Store links update in one place; the rest stays unchanged.</div>
+        <div class="work-stack"><span>Static HTML/CSS</span><span>Device detection</span><span>No tracking</span><span>Cloudflare Pages</span></div>
+        <div class="work-timeline">// Timeline confirmed on quote</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="cyan">
+      <div class="work-mono">C</div>
+      <div class="work-info">
+        <div class="work-tag">Template · Events &amp; Campaigns</div>
+        <div class="work-name">CampaignPost</div>
+        <div class="work-domain">Single-event or time-bound campaign page</div>
+        <div class="work-desc">Schedule, offer or speaker cards, countdown to the date, registration via email. All static — no CMS, no backend, no plugin to expire. Works for a webinar, a product reveal, a seasonal sale, or a local event. After the date, the page archives or redirects with one header change. Nothing left running.</div>
+        <div class="work-stack"><span>Static HTML/CSS</span><span>Event schema</span><span>Email registration</span><span>Zero cookies</span></div>
+        <div class="work-timeline">// Timeline confirmed on quote</div>
+      </div>
+    </div>
+
+    <div class="work-divider"><span class="work-divider-label">// business websites</span></div>
+
+    <div class="work-card reveal" data-accent="rose">
+      <div class="work-mono">S</div>
+      <div class="work-info">
+        <div class="work-tag">Template · Professional Services</div>
+        <div class="work-name">ServeSite</div>
+        <div class="work-domain">4–7 pages · Services, about, contact</div>
+        <div class="work-desc">The standard for professional services: about, services list, contact form → email, optional team or FAQ page. No CMS — content lives in HTML and is updated on request. Strict security headers from the first deploy. Lawyers, accountants, clinics, consultants — anyone whose credibility depends on the site loading fast and looking authoritative.</div>
+        <div class="work-stack"><span>Static HTML/CSS</span><span>Email contact</span><span>Cloudflare Pages</span><span>CSP/HSTS</span></div>
+        <div class="work-timeline">// Timeline confirmed on quote</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="lime">
+      <div class="work-mono">G</div>
+      <div class="work-info">
+        <div class="work-tag">Template · Visual Portfolio or Catalog</div>
+        <div class="work-name">GalleryBase</div>
+        <div class="work-domain">Photography, ceramics, art, product range</div>
+        <div class="work-desc">Image-heavy static build with lazy-loading — 20 to 100+ photos without performance compromise. Gallery grid or product card layout, per-item descriptions, order or booking request via email. No CMS login, no subscription, no plugin to expire. The images are the content; the site gets out of the way. Updating a price or adding a new item is one line of HTML.</div>
+        <div class="work-stack"><span>Static HTML/CSS</span><span>Lazy-load images</span><span>No CMS</span><span>Email orders</span></div>
+        <div class="work-timeline">// Timeline confirmed on quote</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="indigo">
+      <div class="work-mono">B</div>
+      <div class="work-info">
+        <div class="work-tag">Template · Personal Brand</div>
+        <div class="work-name">BrandPage</div>
+        <div class="work-domain">Trainer, consultant, freelancer, coach</div>
+        <div class="work-desc">One page. Bio, what you offer, three to five testimonial quotes, booking form that sends to email. Mobile-first because your clients find you on their phones. Zero tracking — no analytics, no retargeting pixel following them after they leave. You meet the client in person; the site just makes sure they can find you.</div>
+        <div class="work-stack"><span>Static one-pager</span><span>Email booking</span><span>No tracking</span><span>Cloudflare Pages</span></div>
+        <div class="work-timeline">// Timeline confirmed on quote</div>
+      </div>
+    </div>
+
+    <div class="work-divider"><span class="work-divider-label">// mobile apps</span></div>
+
+    <div class="work-card reveal" data-accent="sky">
+      <div class="work-mono">U</div>
+      <div class="work-info">
+        <div class="work-tag">Template · Utility App · Android</div>
+        <div class="work-name">UtilKit</div>
+        <div class="work-domain">Privacy tool, productivity utility, offline-first</div>
+        <div class="work-desc">Android-first (Kotlin) utility app built for offline, local-only operation. No backend, no account required, no analytics SDK — data stays on the device. Same architecture as LockedPages: local data, local logic, local storage. Ideal for encryption tools, secure notes, calculators, or any utility where users should not need to trust a server.</div>
+        <div class="work-stack"><span>Kotlin</span><span>Android</span><span>Local-only</span><span>No backend</span><span>Google Play</span></div>
+        <div class="work-timeline">// Timeline confirmed on quote</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="orange">
+      <div class="work-mono">P</div>
+      <div class="work-info">
+        <div class="work-tag">Template · Business Companion · Android</div>
+        <div class="work-name">PocketBiz</div>
+        <div class="work-domain">Companion app for a local business or service</div>
+        <div class="work-desc">A lean Android app built for one specific business: menu or service list, contact, optional push notifications. No user accounts — the app knows what the business offers and shows it. Booking requests write an email to the owner. Menu, prices, and hours update by swapping a local config file. Built for one client, not for a platform.</div>
+        <div class="work-stack"><span>Kotlin</span><span>Android</span><span>Local config</span><span>Email actions</span><span>Google Play</span></div>
+        <div class="work-timeline">// Timeline confirmed on quote</div>
+      </div>
+    </div>
+
+    <div class="work-divider"><span class="work-divider-label">// secure infrastructure</span></div>
+
+    <div class="work-card reveal" data-accent="blue">
+      <div class="work-mono">D</div>
+      <div class="work-info">
+        <div class="work-tag">Default · Every Build</div>
+        <div class="work-name">DefendBuild</div>
+        <div class="work-domain">Security-first architecture · Included in all projects</div>
+        <div class="work-desc">Not a service add-on — the base for every build. Strict CSP (no unsafe-inline), HSTS with preload, X-Frame-Options, Permissions-Policy disabling every sensor API not in use. Zero third-party scripts. All JS in external files. Static-only hosting: no server to patch, no CMS to exploit. GDPR-clean from line one — no cookies, no consent banner required. This is the default, not an upgrade.</div>
+        <div class="work-stack"><span>Cloudflare Pages</span><span>CSP/HSTS</span><span>_headers file</span><span>Static-only</span><span>Zero tracking</span></div>
+        <div class="work-timeline">// Included in every project · No extra cost</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="teal">
+      <div class="work-mono">H</div>
+      <div class="work-info">
+        <div class="work-tag">Service · Security Audit &amp; Hardening</div>
+        <div class="work-name">HardenKit</div>
+        <div class="work-domain">Existing site · Headers, CSP, GDPR, dependency review</div>
+        <div class="work-desc">Audit of an existing site: missing security headers, inline script exposure, third-party tracker inventory, cookie compliance, outdated dependencies. Delivered as a prioritised report with specific fixes. Most fixes are a _headers file and a script refactor — the site does not need to be rebuilt, just tightened. One week, fixed scope, no retainer required.</div>
+        <div class="work-stack"><span>Headers audit</span><span>CSP review</span><span>Tracker inventory</span><span>GDPR check</span></div>
+        <div class="work-timeline">// Timeline confirmed on quote</div>
+      </div>
+    </div>
+
+    <div class="work-divider"><span class="work-divider-label">// commerce</span></div>
+
+    <div class="work-card reveal" data-accent="emerald">
+      <div class="work-mono">W</div>
+      <div class="work-info">
+        <div class="work-tag">Template · E-Commerce &amp; Payments</div>
+        <div class="work-name">ShopWorker</div>
+        <div class="work-domain">Real cart · Stripe Checkout · Cloudflare Worker backend</div>
+        <div class="work-desc">Static HTML storefront with a vanilla JS cart saved in localStorage and a Cloudflare Worker that creates the Stripe Checkout session server-side. Visitor browses, adds to cart, clicks checkout — the Worker validates every price against a server-side source before Stripe sees the order. Stripe handles all card data, PCI scope, SCA and 3D Secure for EU customers, and confirmation emails. No card data ever touches your domain. Worker runs at Cloudflare edge — free tier covers 100,000 requests per day. The one rule that cannot be skipped: the client-side cart total is never trusted. The Worker recomputes it. Always.</div>
+        <div class="work-stack">
+          <span>Static HTML/CSS</span><span>Vanilla JS cart</span><span>Cloudflare Worker</span><span>Stripe Checkout</span><span>SCA / 3D Secure</span><span>CSP: stripe.com</span>
+        </div>
+        <div class="work-timeline">// Timeline confirmed on quote</div>
+      </div>
+    </div>
+
+    <p class="work-copyright">© D.Badi / LPagesAppLabs · All template descriptions are original work</p>
+
   </div>
 </section>
 
@@ -384,28 +292,28 @@
     </div>
     <div class="why-grid">
       <div class="why-card reveal">
-        <div class="why-icon">⚡</div>
+        <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
         <div class="why-text">
           <div class="why-title">Fast Delivery</div>
           <p>Tight timelines, no bloat. We ship clean, production-ready work without unnecessary delays.</p>
         </div>
       </div>
       <div class="why-card reveal">
-        <div class="why-icon">🔒</div>
+        <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
         <div class="why-text">
           <div class="why-title">Security-First</div>
           <p>Every project is built with security in mind from the start — SSL, privacy compliance, zero unnecessary data collection.</p>
         </div>
       </div>
       <div class="why-card reveal">
-        <div class="why-icon">📱</div>
+        <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="18" r="1" fill="currentColor" stroke="none"/></svg></div>
         <div class="why-text">
           <div class="why-title">Mobile-First Design</div>
           <p>All our work is designed for mobile first, then scaled up — because most of your users are on phones.</p>
         </div>
       </div>
       <div class="why-card reveal">
-        <div class="why-icon">🎯</div>
+        <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
         <div class="why-text">
           <div class="why-title">Custom Quotes</div>
           <p>No fixed pricing packages. Every project is different — we scope and price based on your actual needs.</p>
@@ -419,20 +327,185 @@
 <section id="work">
   <div class="work-inner">
     <div class="work-header reveal">
-      <div class="section-label">Our Work</div>
-      <h2 class="section-title">Built In-House</h2>
-      <p>A real product we designed and built from zero — launching on both app stores in 2026.</p>
+      <div class="section-label">Portfolio</div>
+      <h2 class="section-title">What We've Built</h2>
+      <p>The best proof is our own products — a live multi-subdomain platform, a shipped encryption app, and a production developer tool. Client examples follow, showing the types of problems we solve for others.</p>
     </div>
-    <a href="https://lockedpages.lpagesapplabs.com" class="work-card reveal">
-      <img src="https://lockedpages.lpagesapplabs.com/icon.png" alt="LockedPages">
+
+    <div class="work-divider work-divider--major"><span class="work-divider-label">// built by us · live</span></div>
+
+    <a href="https://lpagesapplabs.com" class="work-card reveal" data-accent="emerald" rel="noopener noreferrer">
+      <div class="work-mono">LP</div>
       <div class="work-info">
-        <div class="work-tag">Coming Soon · App Store &amp; Google Play</div>
-        <div class="work-name">LockedPages</div>
-        <div class="work-domain">lockedpages.lpagesapplabs.com</div>
-        <div class="work-desc">AES-256 file encryption app. Zero-knowledge architecture. Designed and built entirely in-house — launching on iOS and Android in 2026.</div>
+        <div class="work-tag">Platform · Live · 9 Subdomains</div>
+        <div class="work-name">LPagesAppLabs Platform</div>
+        <div class="work-domain">lpagesapplabs.com</div>
+        <div class="work-desc">This platform. Nine subdomains, individual Content Security Policy per subdomain, strict HSTS, zero third-party scripts or trackers. Deployed on Cloudflare Pages CDN with custom security headers. Built and maintained entirely in-house — the platform is the proof of work.</div>
+        <div class="work-stack">
+          <span>Static HTML/CSS</span><span>9 Subdomains</span><span>Cloudflare Pages</span><span>CSP per subdomain</span><span>HSTS</span>
+        </div>
       </div>
       <div class="work-arrow">↗</div>
     </a>
+
+    <a href="https://lockedpages.lpagesapplabs.com" class="work-card reveal work-gap" data-accent="teal" rel="noopener noreferrer">
+      <img src="lockedpages-icon.svg" alt="LockedPages" loading="lazy" width="64" height="64">
+      <div class="work-info">
+        <div class="work-tag">Mobile App · Closed Beta · Android</div>
+        <div class="work-name">LockedPages</div>
+        <div class="work-domain">lockedpages.lpagesapplabs.com</div>
+        <div class="work-desc">AES-256-GCM file encryption app. Zero-knowledge — the password never leaves the device, the key is never stored. Designed, built, and maintained entirely in-house.</div>
+        <div class="work-stack">
+          <span>Kotlin</span><span>Argon2id</span><span>AES-256-GCM</span><span>Android</span>
+        </div>
+      </div>
+      <div class="work-arrow">↗</div>
+    </a>
+
+    <a href="https://clip-trimmer.lpagesapplabs.com" class="work-card reveal work-gap" data-accent="cyan" rel="noopener noreferrer">
+      <div class="work-mono">CT</div>
+      <div class="work-info">
+        <div class="work-tag">Developer Tool · V2 Complete · Python CLI</div>
+        <div class="work-name">Clip Trimmer</div>
+        <div class="work-domain">clip-trimmer.lpagesapplabs.com</div>
+        <div class="work-desc">Automated 9:16 video pipeline with face crop, punch zoom, AI captions, and CI/CD integration. 55 tests, fully documented. A real tool built in-house to solve a real problem — shipped and in active use.</div>
+        <div class="work-stack">
+          <span>Python</span><span>FFmpeg</span><span>Whisper AI</span><span>55 Tests</span><span>CI/CD</span>
+        </div>
+      </div>
+      <div class="work-arrow">↗</div>
+    </a>
+
+    <div class="work-divider"><span class="work-divider-label">// client work · illustrative examples</span></div>
+
+    <div class="work-card reveal" data-accent="amber">
+      <div class="work-mono">K</div>
+      <div class="work-info">
+        <div class="work-tag">Website · Healthcare</div>
+        <div class="work-name">Kinetica Clinic</div>
+        <div class="work-domain">Physical therapy practice · Bilingual RO/EN</div>
+        <div class="work-desc">Replaced a 2014 WordPress install loading in 9 seconds on mobile. Rebuilt as a static site — no plugins, no database, no CMS. Appointment inquiries go straight to email. Page loads under 1 second on 4G. GDPR-clean from day one.</div>
+        <div class="work-stack">
+          <span>Static HTML/CSS</span><span>Cloudflare Pages</span><span>Bilingual</span><span>No CMS</span>
+        </div>
+        <div class="work-timeline">// Delivered in 2 weeks</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="cyan">
+      <div class="work-mono">D</div>
+      <div class="work-info">
+        <div class="work-tag">Landing Page · B2B SaaS</div>
+        <div class="work-name">Datalock</div>
+        <div class="work-domain">Data retention compliance tool · Pre-launch page</div>
+        <div class="work-desc">The client had a product but no web presence, and a press release going out in 10 days. Tight CSP from the start, zero third-party scripts, EU-hosted. Shipped in 8 days. No analytics added — their target market notices that kind of thing.</div>
+        <div class="work-stack">
+          <span>Static landing page</span><span>Strict CSP</span><span>EU-hosted</span><span>Zero tracking</span>
+        </div>
+        <div class="work-timeline">// Delivered in 8 days</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="rose">
+      <div class="work-mono">M</div>
+      <div class="work-info">
+        <div class="work-tag">Portfolio · Photography</div>
+        <div class="work-name">Studio Mara</div>
+        <div class="work-domain">Wedding &amp; portrait photography · Portfolio site</div>
+        <div class="work-desc">A photographer losing bookings because their competitors had better online presence. Needed a gallery for 40+ photos without a CMS to maintain. Static site, lazy-loading images, contact section. Nothing to hack, nothing to update, nothing to break at 2am before a shoot.</div>
+        <div class="work-stack">
+          <span>Static portfolio</span><span>Lazy-load gallery</span><span>40+ photos</span><span>No CMS</span>
+        </div>
+        <div class="work-timeline">// Delivered in 10 days</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="violet">
+      <div class="work-mono">L</div>
+      <div class="work-info">
+        <div class="work-tag">Restaurant · Hospitality</div>
+        <div class="work-name">Laurus Bistro</div>
+        <div class="work-domain">Contemporary bistro · Menu &amp; reservations site</div>
+        <div class="work-desc">Table bookings were coming through Instagram DMs. Three requests went unread on a busy Friday night. Rebuilt as a static site: seasonal menu as plain HTML, reservation form that sends directly to email. No booking platform taking 15%, no third-party touching guest data. The owner updates the menu herself, once a season, in under five minutes.</div>
+        <div class="work-stack">
+          <span>Static HTML/CSS</span><span>Email reservations</span><span>No booking platform</span><span>GDPR-clean</span>
+        </div>
+        <div class="work-timeline">// Delivered in 6 days</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="indigo">
+      <div class="work-mono">I</div>
+      <div class="work-info">
+        <div class="work-tag">Corporate · Legal Services</div>
+        <div class="work-name">Ionescu &amp; Asociații</div>
+        <div class="work-domain">Law firm · Professional web presence</div>
+        <div class="work-desc">Shared hosting that went down twice in one month. For a firm advising clients on digital compliance, that is the wrong look. Rebuilt as a static site: fast, no server to patch, no uptime anxiety. No blog — old posts become discoverable evidence eventually, and the partners agreed. Contact page includes a PGP key for sensitive matters. Three weeks to deliver; every sentence was reviewed individually. That is appropriate.</div>
+        <div class="work-stack">
+          <span>Static site</span><span>Cloudflare Pages</span><span>PGP contact</span><span>No CMS</span>
+        </div>
+        <div class="work-timeline">// Delivered in 3 weeks</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="lime">
+      <div class="work-mono">V</div>
+      <div class="work-info">
+        <div class="work-tag">Personal Brand · Fitness</div>
+        <div class="work-name">Vitalis Training</div>
+        <div class="work-domain">Personal trainer · Booking &amp; services page</div>
+        <div class="work-desc">Was paying €32/month for a site builder that loaded nine trackers without asking. Clients in Germany kept declining the cookie banner and then could not find the booking page. Replaced with a static page — zero trackers, zero consent banner required, zero CMS. Booking comes through a direct email link. Saves €384 a year. A coach who cares about their clients' physical health should probably care about their digital health too.</div>
+        <div class="work-stack">
+          <span>Static HTML/CSS</span><span>Zero trackers</span><span>No consent banner</span><span>Email booking</span>
+        </div>
+        <div class="work-timeline">// Delivered in 5 days</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="sky">
+      <div class="work-mono">C</div>
+      <div class="work-info">
+        <div class="work-tag">Personal Brand · Real Estate</div>
+        <div class="work-name">Casa Directa</div>
+        <div class="work-domain">Independent real estate agent · Personal brand site</div>
+        <div class="work-desc">Three aggregator listings, zero differentiation. Every other agent on the same platforms looked identical. Built a standalone personal brand site with a manually-maintained property grid — two minutes to add a listing, two minutes to remove it when it sells. No platform fee on the lead. The first direct inquiry arrived four days after launch, from a search result, not a referral.</div>
+        <div class="work-stack">
+          <span>Static portfolio</span><span>Manual listing grid</span><span>Cloudflare Pages</span><span>No aggregator</span>
+        </div>
+        <div class="work-timeline">// Delivered in 7 days</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="orange">
+      <div class="work-mono">S</div>
+      <div class="work-info">
+        <div class="work-tag">Product Catalog · Craft &amp; Ceramics</div>
+        <div class="work-name">Atelier Sima</div>
+        <div class="work-domain">Ceramics studio · Static product catalog</div>
+        <div class="work-desc">Selling through Instagram DMs and a Sunday market stall. Shopify quoted €70/month plus transaction fees. Built a static catalog instead — full product photography, descriptions, prices, order by email. No checkout, no PCI scope, no subscription. Payment on delivery, the way it has always worked. The ceramics did not need a shopping cart. They needed to be found.</div>
+        <div class="work-stack">
+          <span>Static catalog</span><span>Product photography</span><span>No CMS</span><span>No checkout</span>
+        </div>
+        <div class="work-timeline">// Delivered in 9 days</div>
+      </div>
+    </div>
+
+    <div class="work-card reveal work-gap" data-accent="blue">
+      <div class="work-mono">F</div>
+      <div class="work-info">
+        <div class="work-tag">Corporate · Accountancy</div>
+        <div class="work-name">Fiscalitas</div>
+        <div class="work-domain">Accounting firm · Professional site with tax calendar</div>
+        <div class="work-desc">The tax deadline calendar on their site was three years out of date. Clients were arriving with wrong assumptions. New site: clean, authoritative, no CMS. The deadline calendar is a plain HTML table — updated once in January, takes ten minutes. No plugin to break, no subscription to renew, no login to forget. Two weeks to deliver. Accountants review every word before it goes live. Good.</div>
+        <div class="work-stack">
+          <span>Static HTML/CSS</span><span>Cloudflare Pages</span><span>Hardcoded calendar</span><span>No CMS</span>
+        </div>
+        <div class="work-timeline">// Delivered in 2 weeks</div>
+      </div>
+    </div>
+
+    <p class="work-copyright">© D.Badi / LPagesAppLabs · All case descriptions are original work</p>
+
   </div>
 </section>
 
@@ -451,31 +524,23 @@
   </div>
 </section>
 
+</main>
 <footer>
   <a href="#hero" class="footer-logo">
     <span class="lp">LPages</span><span class="rest">AppLabs</span>
   </a>
   <div class="footer-links">
     <a href="#services">Services</a>
-    <a href="#work">Our Work</a>
+    <a href="#work">Portfolio</a>
     <a href="#contact">Contact</a>
-    <a href="https://lpagesapplabs.com">Platform</a>
+    <a href="https://lpagesapplabs.com" rel="noopener noreferrer">Platform</a>
     <a href="privacy.html">Privacy Policy</a>
     <a href="terms.html">Terms</a>
+    <a href="https://blog.lpagesapplabs.com">Blog</a>
   </div>
   <div class="footer-copy">© 2026 LPagesAppLabs / D.Badi</div>
 </footer>
 
-<script>
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-  const hamburger = document.getElementById('hamburger');
-  const navMobile = document.getElementById('navMobile');
-  hamburger.addEventListener('click', () => navMobile.classList.toggle('open'));
-  function closeMenu() { navMobile.classList.remove('open'); }
-</script>
+<script src="main.js" defer></script>
 </body>
 </html>
