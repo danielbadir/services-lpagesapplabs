@@ -1,0 +1,41 @@
+name: checks
+
+# A2/A3 under Master Rules: this site is publicly released, so tests and linting
+# are hard gates, not advisory. No npm, no build step — the site has none and the
+# checks should not introduce one.
+on:
+  push:
+    branches: [main, subdomeniu1]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Static checks (CSP integrity, links, legal freshness, a11y basics)
+        run: python3 .ci/check.py
+
+  headers:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assert live security headers
+        run: |
+          set -e
+          URL="${SITE_URL:-https://lpagesapplabs.com}"
+          H=$(curl -sIL --max-time 20 "$URL")
+          for h in "content-security-policy" "strict-transport-security" \
+                   "x-content-type-options" "referrer-policy" "permissions-policy"; do
+            echo "$H" | grep -qi "^$h:" || { echo "MISSING HEADER: $h"; exit 1; }
+          done
+          echo "$H" | grep -i "^content-security-policy:" | grep -q "unsafe-inline" \
+            && { echo "CSP regressed: unsafe-inline present"; exit 1; } || true
+          echo "all required headers present, CSP has no unsafe-inline"
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
