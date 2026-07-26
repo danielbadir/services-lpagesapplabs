@@ -1,5 +1,16 @@
 (function () {
   'use strict';
+  // Set before the body paints so the CSS below can hide .reveal elements.
+  // If this file fails to load, the class is never added, no .reveal is ever
+  // hidden, and the whole page stays readable — the animation is the thing
+  // that degrades, not the content. Previously .reveal was hidden by default
+  // and only JS could reveal it, so one failed request blanked 151 elements
+  // across the platform with no error and no fallback.
+  document.documentElement.className += ' js';
+}());
+
+(function () {
+  'use strict';
 
   var revealObserver = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {

@@ -383,13 +383,13 @@
     .footer-copy { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted-dim); }
 
     /* SCROLL REVEAL */
-    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
-    .reveal.visible { opacity: 1; transform: none; }
+    .js .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .js .reveal.visible { opacity: 1; transform: none; }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
       html { scroll-behavior: auto; }
-      .reveal { opacity: 1; transform: none; }
+      .js .reveal { opacity: 1; transform: none; }
     }
 
     @media (max-width: 768px) {
@@ -461,3 +461,19 @@ a:focus-visible, button:focus-visible, input:focus-visible,
 .nav-links a, .footer-links a, .nav-mobile a, .nav-right a {
   display: inline-flex; align-items: center; min-height: 24px;
 }
+
+/* 404 page. No inline style attributes anywhere — style-src is 'self' with no
+   unsafe-inline, so an inline style would simply not apply and the page would
+   render bare. The strict CSP is only real because nothing depends on inline. */
+.nf-wrap {
+  min-height: 70vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  padding: 8rem 5% 4rem; gap: 1rem;
+}
+.nf-code {
+  font-family: 'DM Mono', monospace; font-size: .72rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--muted);
+}
+.nf-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 5vw, 3rem); }
+.nf-body { color: var(--muted); max-width: 46ch; line-height: 1.7; }
+.nf-back { color: var(--white); }
