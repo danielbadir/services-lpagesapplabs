@@ -109,16 +109,21 @@ for p in [x for x in HTML if os.path.basename(x) in ("privacy.html", "terms.html
     if "governed by the laws of" in s and "Romania (EU)" not in s:
         fail("legal-jurisdiction", p, "governing law is not the platform-standard Romania (EU)")
 
-# 8 — Internal tooling must never be publicly servable. Both files stay tracked
-#     in git (GitHub Actions needs the workflow file present in the checkout to
-#     run at all), so the block happens at the edge via _redirects instead —
-#     found live on lpagesapplabs.com the same day this file was written.
-if os.path.exists("_redirects"):
-    rd = read("_redirects")
-    if "/.ci/" not in rd:      fail("tooling-exposed", "_redirects", "does not block /.ci/*")
-    if "/.github/" not in rd:  fail("tooling-exposed", "_redirects", "does not block /.github/*")
+# 8 — Internal tooling must never be publicly servable. This used to be enforced
+#     by a _redirects rule that deployed correctly but never actually fired —
+#     Cloudflare Pages serves an existing static asset before ever consulting
+#     _redirects, so the block was a rule that could never be reached, twice.
+#     The real fix is structural: servable content lives under public/, and
+#     .ci/ + .github/ live as siblings outside it, so Cloudflare's configured
+#     Build output directory (public/) never contains them at all. This check
+#     verifies that invariant rather than trusting a routing rule to hold.
+if not os.path.isdir("public"):
+    fail("tooling-exposed", ".", "no public/ directory — served content is not separated from .ci/.github")
 else:
-    fail("tooling-exposed", "_redirects", "missing entirely — .ci/ and .github/ are publicly servable")
+    if os.path.exists(os.path.join("public", ".ci")):
+        fail("tooling-exposed", "public/.ci", "internal tooling copied into the served directory")
+    if os.path.exists(os.path.join("public", ".github")):
+        fail("tooling-exposed", "public/.github", "internal tooling copied into the served directory")
 
 # 9 — Document basics.
 for p in HTML:

@@ -1,0 +1,87 @@
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0F172A;--surface:#1E293B;
+      --emerald:#10B981;--em-glow:rgba(16,185,129,0.15);--em-glow2:rgba(16,185,129,0.07);
+      --white:#F8FAFC;--muted:#94A3B8;--border:rgba(16,185,129,0.2)
+    }
+    body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;line-height:1.8}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.25rem 5%;background:rgba(15,23,42,0.9);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--white);text-decoration:none}
+    .nav-logo span{color:var(--emerald)}
+    .nav-links{display:flex;align-items:center;gap:1.5rem}
+    .nav-links a{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;transition:color .2s}
+    .nav-links a:hover{color:var(--emerald)}
+    .wrap{max-width:780px;margin:0 auto;padding:9rem 5% 6rem;position:relative;z-index:1}
+    .page-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--emerald);display:block;margin-bottom:1rem}
+    h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,5vw,3rem);margin-bottom:1rem}
+    .meta{font-family:'DM Mono',monospace;font-size:.78rem;color:var(--muted);display:flex;gap:2rem;flex-wrap:wrap;padding-bottom:2.5rem;border-bottom:1px solid var(--border);margin-bottom:3rem}
+    .intro{background:var(--em-glow2);border:1px solid var(--border);border-left:3px solid var(--emerald);border-radius:8px;padding:1.5rem 1.8rem;margin-bottom:3rem}
+    .intro p{font-size:.95rem;color:var(--muted)}
+    .intro strong{color:var(--emerald)}
+    .section{margin-bottom:3rem}
+    .section h2{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;display:flex;align-items:center;gap:.6rem;padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:1rem}
+    .num{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--emerald);background:var(--em-glow);padding:.2rem .5rem;border-radius:4px}
+    .section p{color:var(--muted);font-size:.95rem;margin-bottom:1rem}
+    .section ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin:.8rem 0 1rem}
+    .section ul li{color:var(--muted);font-size:.95rem;padding-left:1.4rem;position:relative}
+    .section ul li::before{content:'▸';position:absolute;left:0;color:var(--emerald)}
+    .highlight{color:var(--emerald);font-weight:500}
+    footer{padding:2.5rem 5%;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;position:relative;z-index:1}
+    .footer-links{display:flex;gap:1.5rem;flex-wrap:wrap}
+    .footer-links a{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+    .footer-links a:hover{color:var(--emerald)}
+    .footer-copy{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted);opacity:.5}
+    @media(max-width:768px){.wrap{padding:7rem 5% 4rem}.meta{flex-direction:column;gap:.5rem}footer{flex-direction:column;text-align:center}}
+  
+/* Brand accent for footer logo span */
+.ft-accent { color: #10B981; }
+
+/* Footer brand link on legal pages */
+.legal-brand-link { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .95rem; text-decoration: none; color: var(--white); }
+
+/* Skip-to-content — WCAG 2.4.1 Level A */
+.skip-link {
+  position: absolute;
+  top: -48px;
+  left: 1rem;
+  background: #10B981;
+  color: #0F172A;
+  padding: 0.5rem 1.1rem;
+  border-radius: 0 0 6px 6px;
+  z-index: 9999;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+.skip-link:focus { top: 0; outline: 2px solid #0F172A; outline-offset: 2px; }
+
+/* Focus is a designed state, not a browser default. Nothing on this platform
+   defined one except .skip-link, and five inputs actively removed the ring and
+   signalled focus with a 1px border tint only — a colour-only indicator, which
+   fails WCAG 1.4.1 and 2.4.7. White on these surfaces measures >13:1.
+   :focus-visible, so pointer users never see a ring they did not ask for. */
+:focus-visible {
+  outline: 2px solid #F8FAFC;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+a:focus-visible, button:focus-visible, input:focus-visible,
+[tabindex]:focus-visible, .btn:focus-visible {
+  outline: 2px solid #F8FAFC;
+  outline-offset: 2px;
+}
+
+/* Card titles are h3 so screen readers and search engines can navigate by
+   heading; :where() keeps specificity at 0 so the existing class rules,
+   which were written for divs, continue to control every visual property. */
+:where(h3.work-name, h3.feature-title, h3.step-title, h3.svc-title, h3.prod-name, h3.post-title, h3.concept-title, h3.why-title, h3.card-title, h3.tier-name) {
+  margin: 0; font-size: inherit; font-weight: inherit; line-height: inherit;
+}
+
+/* WCAG 2.5.8 — standalone nav and footer links computed ~20px tall against a
+   24px minimum. min-height with inline-flex raises the hit area without adding
+   padding that would shift the existing horizontal rhythm. */
+.nav-links a, .footer-links a, .nav-mobile a, .nav-right a {
+  display: inline-flex; align-items: center; min-height: 24px;
+}
