@@ -6,7 +6,7 @@
       --emerald-glow: rgba(16,185,129,0.15);
       --emerald-glow2: rgba(16,185,129,0.07);
       --cyan: #22D3EE;
-      --white: #F8FAFC; --muted: #94A3B8;
+      --white: #F8FAFC; --muted: #94A3B8; --muted-dim: #8A97A8;
       --border: rgba(16,185,129,0.18);
     }
     html { scroll-behavior: smooth; }
@@ -227,7 +227,7 @@
     .work-info .work-name { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.3rem; }
     .work-info .work-domain { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); margin-bottom: 0.6rem; }
     .work-info .work-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
-    .work-arrow { margin-left: auto; font-size: 1.2rem; color: var(--muted); opacity: 0.5; flex-shrink: 0; }
+    .work-arrow { margin-left: auto; font-size: 1.2rem; color: var(--muted-dim); flex-shrink: 0; }
     .work-mono {
       width: 64px; height: 64px; border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
@@ -301,7 +301,7 @@
     /* Section-break divider with larger top margin */
     .work-divider--major { margin-top: 3rem; }
     /* Attribution note below template/portfolio grids */
-    .work-copyright { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted); opacity: 0.45; text-align: right; margin-top: 2rem; letter-spacing: 0.04em; }
+    .work-copyright { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted-dim); text-align: right; margin-top: 2rem; letter-spacing: 0.04em; }
 
     .work-divider {
       display: flex; align-items: center; gap: 1rem; margin: 2.5rem 0 1.5rem;
@@ -380,7 +380,7 @@
       color: var(--muted); text-decoration: none; transition: color 0.2s;
     }
     .footer-links a:hover { color: var(--emerald); }
-    .footer-copy { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); opacity: 0.5; }
+    .footer-copy { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted-dim); }
 
     /* SCROLL REVEAL */
     .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
@@ -428,3 +428,36 @@
   transition: top 0.15s ease;
 }
 .skip-link:focus { top: 0; outline: 2px solid #0F172A; outline-offset: 2px; }
+
+/* Focus is a designed state, not a browser default. Nothing on this platform
+   defined one except .skip-link, and five inputs actively removed the ring and
+   signalled focus with a 1px border tint only — a colour-only indicator, which
+   fails WCAG 1.4.1 and 2.4.7. White on these surfaces measures >13:1.
+   :focus-visible, so pointer users never see a ring they did not ask for. */
+:focus-visible {
+  outline: 2px solid #F8FAFC;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+a:focus-visible, button:focus-visible, input:focus-visible,
+[tabindex]:focus-visible, .btn:focus-visible {
+  outline: 2px solid #F8FAFC;
+  outline-offset: 2px;
+}
+
+/* Card titles are h3 so screen readers and search engines can navigate by
+   heading; :where() keeps specificity at 0 so the existing class rules,
+   which were written for divs, continue to control every visual property. */
+:where(h3.work-name, h3.feature-title, h3.step-title, h3.svc-title, h3.prod-name, h3.post-title, h3.concept-title, h3.why-title, h3.card-title, h3.tier-name) {
+  margin: 0; font-size: inherit; font-weight: inherit; line-height: inherit;
+}
+:where(h3.vis-title, h3.m-name, h3.goal-title, h3.lt-title, h3.how-title, h3.tier-head) {
+  margin: 0; font-size: inherit; font-weight: inherit; line-height: inherit;
+}
+
+/* WCAG 2.5.8 — standalone nav and footer links computed ~20px tall against a
+   24px minimum. min-height with inline-flex raises the hit area without adding
+   padding that would shift the existing horizontal rhythm. */
+.nav-links a, .footer-links a, .nav-mobile a, .nav-right a {
+  display: inline-flex; align-items: center; min-height: 24px;
+}

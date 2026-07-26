@@ -55,3 +55,33 @@
   transition: top 0.15s ease;
 }
 .skip-link:focus { top: 0; outline: 2px solid #0F172A; outline-offset: 2px; }
+
+/* Focus is a designed state, not a browser default. Nothing on this platform
+   defined one except .skip-link, and five inputs actively removed the ring and
+   signalled focus with a 1px border tint only — a colour-only indicator, which
+   fails WCAG 1.4.1 and 2.4.7. White on these surfaces measures >13:1.
+   :focus-visible, so pointer users never see a ring they did not ask for. */
+:focus-visible {
+  outline: 2px solid #F8FAFC;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+a:focus-visible, button:focus-visible, input:focus-visible,
+[tabindex]:focus-visible, .btn:focus-visible {
+  outline: 2px solid #F8FAFC;
+  outline-offset: 2px;
+}
+
+/* Card titles are h3 so screen readers and search engines can navigate by
+   heading; :where() keeps specificity at 0 so the existing class rules,
+   which were written for divs, continue to control every visual property. */
+:where(h3.work-name, h3.feature-title, h3.step-title, h3.svc-title, h3.prod-name, h3.post-title, h3.concept-title, h3.why-title, h3.card-title, h3.tier-name) {
+  margin: 0; font-size: inherit; font-weight: inherit; line-height: inherit;
+}
+
+/* WCAG 2.5.8 — standalone nav and footer links computed ~20px tall against a
+   24px minimum. min-height with inline-flex raises the hit area without adding
+   padding that would shift the existing horizontal rhythm. */
+.nav-links a, .footer-links a, .nav-mobile a, .nav-right a {
+  display: inline-flex; align-items: center; min-height: 24px;
+}
