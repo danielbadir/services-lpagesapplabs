@@ -1,0 +1,6 @@
+# Internal tooling stays in the repo for GitHub Actions to read, but must
+# never be publicly servable. Untracking these from git would stop CI from
+# running at all (Actions checks the repo out and needs the workflow file
+# present) — this blocks them at the edge instead, leaving both intact.
+/.ci/*        /404.html   404
+/.github/*    /404.html   404
