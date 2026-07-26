@@ -237,7 +237,10 @@
     /* Scenario cards state a brief we are built for, never work delivered.
        Deliberately unlike .work-card — no monogram, no fill, dashed edge — so a
        reader cannot mistake one for a case study however fast they skim. */
-    .work-card.work-card--scenario {
+    .work-card.work-card--scenario[data-accent] {
+      /* [data-accent] repeated (already true of every scenario card) to raise
+         specificity above .work-card[data-accent="X"] — same specificity,
+         later source order would otherwise let the accent border-color win. */
       background: transparent; border-style: dashed;
       border-color: rgba(148,163,184,0.38); padding: 1.6rem 2rem;
     }
