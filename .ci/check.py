@@ -125,7 +125,50 @@ else:
     if os.path.exists(os.path.join("public", ".github")):
         fail("tooling-exposed", "public/.github", "internal tooling copied into the served directory")
 
-# 9 — Document basics.
+# 9 — Render-contract check. Today's outage: main.js was moved into <head>
+#     without defer so its .js flag would land before first paint, but the rest
+#     of the file still called document.querySelectorAll('.reveal') at parse
+#     time — when the body does not exist yet. It matched zero elements, nothing
+#     was ever observed, .visible was never added, and every .reveal element
+#     stayed at opacity:0 on all nine production sites. Nothing was malformed;
+#     every static check passed while the pages were visibly blank.
+#     The invariant: a head script without defer/async must not touch the DOM
+#     at parse time, and any stylesheet that hides .reveal behind .js must have
+#     a script that both sets the flag and reveals on DOM-ready.
+for p in HTML:
+    s = read(p)
+    head = s.split("</head>")[0] if "</head>" in s else s
+    for m in re.finditer(r'<script[^>]*\bsrc="([^"]+)"[^>]*>', head):
+        tag, src = m.group(0), m.group(1)
+        if "defer" in tag or "async" in tag:
+            continue
+        js_path = os.path.join(os.path.dirname(p) or ".", src)
+        if not os.path.exists(js_path):
+            continue
+        js = read(js_path)
+        # strip function bodies is overkill; the reliable signal is whether any
+        # DOM query sits outside a boot/DOMContentLoaded guard
+        touches_dom = re.search(r'document\.(querySelectorAll|querySelector|getElementById)', js)
+        guarded = ("DOMContentLoaded" in js) or ("readyState" in js)
+        if touches_dom and not guarded:
+            fail("render-contract", js_path,
+                 "loaded in <head> without defer but queries the DOM at parse time — "
+                 "the body is not parsed yet, so this silently matches nothing")
+
+for c in CSS:
+    s = read(c)
+    if re.search(r'\.js\s+\.reveal\s*\{[^}]*opacity:\s*0', s):
+        site_js = os.path.join(os.path.dirname(c) or ".", "main.js")
+        if not os.path.exists(site_js):
+            fail("render-contract", c, ".js .reveal is hidden but no main.js exists to reveal it")
+        else:
+            js = read(site_js)
+            if "className" not in js and "classList" not in js:
+                fail("render-contract", site_js, "never sets the .js flag that the CSS depends on")
+            if "visible" not in js:
+                fail("render-contract", site_js, "never adds .visible — hidden content can never appear")
+
+# 10 — Document basics.
 for p in HTML:
     s = read(p)
     if 'html lang=' not in s:                        fail("a11y-lang", p, "no lang attribute")
