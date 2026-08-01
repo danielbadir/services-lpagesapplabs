@@ -106,8 +106,15 @@ for p in [x for x in HTML if os.path.basename(x) in ("privacy.html", "terms.html
         age = (datetime.date.today() - datetime.date(*map(int, m.group(1).split("-")))).days
         if age > 365:
             fail("legal-stale", p, "effective date is %d days old" % age)
-    if "governed by the laws of" in s and "Romania (EU)" not in s:
-        fail("legal-jurisdiction", p, "governing law is not the platform-standard Romania (EU)")
+    # The original guard was `"governed by the laws of" in s`, which never matched
+    # root terms.html ("governed by AND CONSTRUED IN ACCORDANCE WITH the laws of ...") —
+    # so the one file whose wording actually diverged was the one file the check could
+    # not see. Match on "laws of" alone and read the jurisdiction that follows.
+    for m in re.finditer(r"laws of\s+([^,<.]+)", s):
+        named = m.group(1).strip()
+        if not named.startswith("Romania (EU)"):
+            fail("legal-jurisdiction", p,
+                 'governing law reads "%s", not the platform-standard "Romania (EU)"' % named)
 
 # 8 — Internal tooling must never be publicly servable. This used to be enforced
 #     by a _redirects rule that deployed correctly but never actually fired —
@@ -178,6 +185,115 @@ for p in HTML:
         warn("seo-description", p, "no meta description")
     for m in re.finditer(r'<img(?![^>]*\balt=)[^>]*>', s):
         fail("a11y-img-alt", p, "img without alt")
+
+# 11 — HTML structural validity (A3). Nothing on this platform validated HTML at all:
+#      the workflow claimed A2/A3 compliance in a comment while running no validator.
+#      A full W3C conformance checker needs Java and a network fetch, which would add the
+#      first dependency this site has ever had and could fail closed. This is the
+#      dependency-free subset that catches structural defects a browser silently absorbs —
+#      an unclosed <div> shifts an entire layout with no error anywhere.
+#
+#      Deliberately NOT checked: a bare "&" followed by whitespace. That is valid HTML5,
+#      and the first draft of this rule flagged 45 of them across the platform. Only an
+#      *ambiguous* ampersand (&name; that is not a real entity) is a parse error.
+from html.parser import HTMLParser
+from html.entities import html5 as HTML5_ENTITIES
+
+VOID_ELEMENTS = {"area","base","br","col","embed","hr","img","input","link","meta",
+                 "param","source","track","wbr"}
+# Elements whose end tag is optional in HTML5. Enforcing balance on these produces
+# false positives on valid markup, so they are excluded from the stack.
+OPTIONAL_END = {"p","li","dt","dd","option","thead","tbody","tfoot","tr","td","th",
+                "rt","rp","optgroup","colgroup","html","head","body"}
+
+class StructureCheck(HTMLParser):
+    def __init__(self):
+        HTMLParser.__init__(self, convert_charrefs=False)
+        self.stack, self.ids, self.idrefs, self.errors = [], {}, [], []
+
+    def _err(self, msg): self.errors.append(msg)
+
+    def handle_starttag(self, tag, attrs):
+        names = [a[0] for a in attrs]
+        for n in set(names):
+            if names.count(n) > 1:
+                self._err("duplicate attribute '%s' on <%s> (line %d)" % (n, tag, self.getpos()[0]))
+        d = dict(attrs)
+        if d.get("id"):
+            if d["id"] in self.ids:
+                self._err("duplicate id '%s' (lines %d and %d)" % (d["id"], self.ids[d["id"]], self.getpos()[0]))
+            else:
+                self.ids[d["id"]] = self.getpos()[0]
+        for a in ("aria-controls", "aria-labelledby", "aria-describedby"):
+            if d.get(a):
+                for ref in d[a].split():
+                    self.idrefs.append((self.getpos()[0], a, ref))
+        if tag not in VOID_ELEMENTS and tag not in OPTIONAL_END:
+            self.stack.append((tag, self.getpos()[0]))
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+        if self.stack and self.stack[-1][0] == tag: self.stack.pop()
+
+    def handle_endtag(self, tag):
+        if tag in VOID_ELEMENTS:
+            self._err("end tag </%s> for void element (line %d)" % (tag, self.getpos()[0])); return
+        if tag in OPTIONAL_END: return
+        if not self.stack:
+            self._err("stray </%s> (line %d)" % (tag, self.getpos()[0])); return
+        if self.stack[-1][0] == tag:
+            self.stack.pop(); return
+        for i in range(len(self.stack) - 1, -1, -1):
+            if self.stack[i][0] == tag:
+                unclosed = ", ".join("<%s> from line %d" % (t, l) for t, l in self.stack[i+1:])
+                self._err("</%s> at line %d closes across unclosed %s" % (tag, self.getpos()[0], unclosed))
+                del self.stack[i:]
+                return
+        self._err("stray </%s> (line %d)" % (tag, self.getpos()[0]))
+
+for p in HTML:
+    s = read(p)
+    parser = StructureCheck()
+    try:
+        parser.feed(s); parser.close()
+    except Exception as e:
+        parser._err("parse error: %s" % e)
+    for tag, line in parser.stack:
+        parser._err("unclosed <%s> opened at line %d" % (tag, line))
+    for line, attr, ref in parser.idrefs:
+        if ref not in parser.ids:
+            parser._err("%s='%s' at line %d references an id that does not exist" % (attr, ref, line))
+    for m in re.finditer(r"&([a-zA-Z][a-zA-Z0-9]*;)", s):
+        if m.group(1) not in HTML5_ENTITIES:
+            parser._err("ambiguous ampersand '&%s' at line %d" % (m.group(1), s[:m.start()].count("\n") + 1))
+    for msg in parser.errors:
+        fail("html-structure", p, msg)
+
+# 12 — Class/stylesheet drift. company.html was written with .footer-logo/.footer-logo-img
+#      copied from index.html; legal.css defines neither, so the footer would have shipped
+#      as an unstyled image. Every other check in this file passed on it.
+#
+#      WARN, not FAIL, and deliberately so: a class can legitimately carry no rules of its
+#      own. The blog TOC marks links .h2/.h3 where only a.h3 needs indenting, so .h2 is
+#      correct markup with no styling. Failing on that would make CI permanently red for
+#      valid code, which teaches people to ignore CI (see the removed live-header job).
+for p in HTML:
+    s = read(p)
+    sheets = re.findall(r'<link[^>]*rel="stylesheet"[^>]*href="([^"]+)"', s)
+    css_text = ""
+    for sheet in sheets:
+        f = os.path.join(os.path.dirname(p), sheet)
+        if os.path.exists(f):
+            css_text += read(f)
+    if not css_text:
+        continue
+    defined = set(re.findall(r'\.([A-Za-z][A-Za-z0-9_-]*)', css_text))
+    used = set()
+    for m in re.finditer(r'class="([^"]+)"', s):
+        used.update(m.group(1).split())
+    # Applied at runtime by main.js rather than authored in the markup.
+    for c in sorted(used - defined - {"visible", "js", "active", "open", "reveal"}):
+        warn("css-class-drift", p, ".%s is used but no stylesheet this page loads defines it" % c)
 
 def report(items, label):
     if not items: return

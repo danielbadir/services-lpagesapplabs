@@ -3,6 +3,19 @@ name: checks
 # A2/A3 under Master Rules: this site is publicly released, so tests and linting
 # are hard gates, not advisory. No npm, no build step — the site has none and the
 # checks should not introduce one.
+#
+# A3 scope — stated precisely, because this comment previously claimed a compliance
+# the file did not implement. Until 2026-07-28 this workflow ran no validator of any
+# kind while asserting A3 was met; the V8 review caught it. What runs now is the
+# `html-structure` rule in .ci/check.py: a dependency-free structural validator built
+# on Python's stdlib HTMLParser. It checks tag balance, duplicate ids, duplicate
+# attributes, void-element misuse, dangling aria-controls/labelledby references, and
+# ambiguous ampersands.
+#
+# It is NOT a full W3C conformance checker. That needs the vnu jar — Java plus a
+# network fetch on every run, which would add the first dependency this site has ever
+# had and could fail closed, exactly like the live-header job removed below. If full
+# conformance is wanted later, run vnu manually during review rather than in CI.
 on:
   push:
     branches: [main, subdomeniu1]
@@ -17,7 +30,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Static checks (CSP integrity, links, legal freshness, a11y basics)
+      - name: Static checks (CSP integrity, links, legal freshness, a11y basics, HTML structure)
         run: python3 .ci/check.py
 
 # The live-header assertion that used to live here was removed 2026-07-27.
