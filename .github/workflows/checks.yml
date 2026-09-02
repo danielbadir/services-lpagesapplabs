@@ -56,11 +56,18 @@ jobs:
           PAT='(BEGIN [A-Z ]*PRIVATE KEY|ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{22,}|AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{32,}|xox[baprs]-[A-Za-z0-9-]{10,}|-----BEGIN OPENSSH|aws_secret_access_key[[:space:]]*=)'
           echo 'AKIAIOSFODNN7EXAMPLE' | grep -qE "$PAT" \
             || { echo "::error::scanner is blind — positive control failed"; exit 1; }
-          if git ls-files -z | xargs -0 grep -lEI "$PAT" 2>/dev/null | grep .; then
+          # The detector files define these patterns, so they match themselves.
+          # The hook carries the identical exemption; without it CI is red forever
+          # (R28). The hole: a secret hidden inside these two files is not caught
+          # here, so read their diffs by eye.
+          DETECTORS='^(\.githooks/pre-commit|\.github/workflows/[a-z-]+\.yml)$'
+          scanned=$(git ls-files | grep -vE "$DETECTORS")
+          if printf '%s\n' "$scanned" | tr '\n' '\0' \
+               | xargs -0 grep -lEI "$PAT" 2>/dev/null | grep .; then
             echo "::error::secret pattern found in tracked files (listed above)"
             exit 1
           fi
-          echo "no secret patterns in $(git ls-files | wc -l) tracked files"
+          echo "no secret patterns in $(printf '%s\n' "$scanned" | wc -l) scanned files"
       - name: Internal documents must never be tracked
         # Rule 23: Review_V6.md was once live and downloadable at the apex.
         run: |
