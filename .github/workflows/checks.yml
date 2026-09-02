@@ -33,6 +33,43 @@ jobs:
       - name: Static checks (CSP integrity, links, legal freshness, a11y basics, HTML structure)
         run: python3 .ci/check.py
 
+  secrets:
+    # GitHub gives secret scanning and push protection free on PUBLIC repos only,
+    # so the platform's private repos have no server-side detection at all.
+    # .githooks/pre-commit is the primary control and refuses the commit outright,
+    # but it depends on `git config core.hooksPath .githooks` — LOCAL config that
+    # does not survive a clone (R31). This job is the backstop for the two ways the
+    # hook gets bypassed: `--no-verify`, and a checkout that never set hooksPath.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Hook is present and executable
+        run: |
+          test -x .githooks/pre-commit \
+            || { echo "::error::.githooks/pre-commit missing or not executable"; exit 1; }
+      - name: Hook self-test — its own controls must still fire
+        # R26/R35: proves the patterns detect real secrets AND ignore this site's own
+        # prose about cryptography. A scanner nobody has proven can fail is not a check.
+        run: .githooks/pre-commit --selftest
+      - name: Scan the tracked tree
+        run: |
+          PAT='(BEGIN [A-Z ]*PRIVATE KEY|ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{22,}|AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{32,}|xox[baprs]-[A-Za-z0-9-]{10,}|-----BEGIN OPENSSH|aws_secret_access_key[[:space:]]*=)'
+          echo 'AKIAIOSFODNN7EXAMPLE' | grep -qE "$PAT" \
+            || { echo "::error::scanner is blind — positive control failed"; exit 1; }
+          if git ls-files -z | xargs -0 grep -lEI "$PAT" 2>/dev/null | grep .; then
+            echo "::error::secret pattern found in tracked files (listed above)"
+            exit 1
+          fi
+          echo "no secret patterns in $(git ls-files | wc -l) tracked files"
+      - name: Internal documents must never be tracked
+        # Rule 23: Review_V6.md was once live and downloadable at the apex.
+        run: |
+          if git ls-files | grep -E '^(Review_V[0-9]+\.md|OWNER_ACTIONS\.md|backlog\.md)$'; then
+            echo "::error::internal document is tracked — it would deploy"
+            exit 1
+          fi
+          echo "no internal documents tracked"
+
 # The live-header assertion that used to live here was removed 2026-07-27.
 # Cloudflare serves a bot challenge to GitHub Actions runners, so it failed on
 # every single run since it was added — the site was correct the whole time.

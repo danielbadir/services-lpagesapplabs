@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+# Blocks a commit that would introduce a secret, or an internal document.
+#
+# WHY THIS EXISTS, and why it is here rather than in .git/hooks/:
+# GitHub gives secret scanning and push protection free on PUBLIC repos only.
+# Both of this platform's private repos (lpagesapplabs, locked-pages) therefore
+# have NO server-side secret detection at all — they are the least protected,
+# not the most. This hook is the replacement, and it is strictly better placed:
+# it refuses the commit, so the secret never enters history, rather than
+# refusing the push after the object already exists locally.
+#
+# It lives in a TRACKED directory because a control that is not in version
+# control is not a control (R31) — .git/hooks/ is not cloned, so a hook there
+# would protect this one checkout and no other. Activate with:
+#     git config core.hooksPath .githooks
+#
+# Self-test (R26 — a check counts only once it has caught its bug):
+#     .githooks/pre-commit --selftest
+set -uo pipefail
+
+PATTERNS='(BEGIN [A-Z ]*PRIVATE KEY|ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{22,}|AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{32,}|xox[baprs]-[A-Za-z0-9-]{10,}|-----BEGIN OPENSSH|aws_secret_access_key[[:space:]]*=|["'"'"']?(api|secret|private)[_-]?key["'"'"']?[[:space:]]*[:=][[:space:]]*["'"'"'][A-Za-z0-9/+=_-]{16,})'
+
+# Internal documents. Rule 23: Review_V6.md was once live and downloadable at
+# the apex, and it took a history rewrite on 2026-09-02 to remove it.
+FORBIDDEN_PATHS='^(Review_V[0-9]+\.md|OWNER_ACTIONS\.md|backlog\.md|.*\.env$|.*\.keystore$|.*\.pem$|.*id_rsa)'
+
+if [ "${1:-}" = "--selftest" ]; then
+  fail=0
+  # Positive controls: each MUST match, or every clean result this hook ever
+  # reports is worthless (R35 — a zero is not evidence until it has been one).
+  for probe in \
+    'AKIAIOSFODNN7EXAMPLE' \
+    'ghp_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+    'api_key = "abcdefghij0123456789"' \
+    '-----BEGIN RSA PRIVATE KEY-----'
+  do
+    if echo "$probe" | grep -qE "$PATTERNS"; then
+      echo "  ok   detects: ${probe:0:44}"
+    else
+      echo "  MISS undetected: $probe"; fail=1
+    fi
+  done
+  # Negative control: ordinary prose must NOT trip it, or people learn to
+  # bypass the hook (R35 — a rule that cries wolf is worse than no rule).
+  for clean in \
+    'Keeping the algorithm secret would not add security' \
+    'password=user_password,' \
+    'fun migrateFile(file: LPFile, password: CharArray)'
+  do
+    if echo "$clean" | grep -qE "$PATTERNS"; then
+      echo "  FALSE POSITIVE on: $clean"; fail=1
+    else
+      echo "  ok   ignores:  ${clean:0:44}"
+    fi
+  done
+  for p in Review_V9.md backlog.md .env public/site.env; do
+    echo "$p" | grep -qE "$FORBIDDEN_PATHS" \
+      && echo "  ok   blocks path: $p" || { echo "  MISS path: $p"; fail=1; }
+  done
+  echo "$( [ $fail -eq 0 ] && echo 'SELFTEST PASS' || echo 'SELFTEST FAIL' )"
+  exit $fail
+fi
+
+staged=$(git diff --cached --name-only --diff-filter=ACM)
+[ -z "$staged" ] && exit 0
+
+blocked=0
+
+while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  if echo "$f" | grep -qE "$FORBIDDEN_PATHS"; then
+    echo "BLOCKED  $f — internal document or credential file, never committed (Rule 23)."
+    blocked=1
+  fi
+done <<< "$staged"
+
+# The detector definitions describe the patterns, so they match themselves:
+# this file's own regex contains the literal aws_secret_access_key=, and the
+# self-test carries a real AWS example key as a probe. Without this exemption
+# the hook refuses to let itself be committed — found 2026-09-02 by trying to
+# install it, not by reading it.
+#
+# The hole this opens, stated plainly: a real secret hidden inside one of these
+# two files would not be caught here. Both are short, both are pure detector
+# logic, and any diff to either should be read by eye for that reason. This is
+# the same exemption gitleaks needs (.gitleaksignore) for the same cause.
+DETECTOR_FILES='^(\.githooks/pre-commit|\.github/workflows/[a-z-]+\.yml)$'
+
+# Scan the staged CONTENT, not the working tree: they differ, and the staged
+# version is what would actually enter history.
+while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  echo "$f" | grep -qE "$DETECTOR_FILES" && continue
+  git show ":$f" 2>/dev/null | grep -nEI "$PATTERNS" | head -3 | while IFS= read -r hit; do
+    echo "BLOCKED  $f:$hit"
+  done
+  if git show ":$f" 2>/dev/null | grep -qEI "$PATTERNS"; then blocked=1; fi
+done <<< "$staged"
+
+if [ "$blocked" -ne 0 ]; then
+  cat <<'MSG'
+
+Commit refused. Nothing has entered history — fix the file and stage it again.
+If this is a false positive, widen the negative controls in .githooks/pre-commit
+and prove the change with --selftest. Do not weaken the pattern silently.
+Genuine one-off override:  git commit --no-verify
+MSG
+  exit 1
+fi
+exit 0
