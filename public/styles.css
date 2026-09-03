@@ -55,7 +55,17 @@
       letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--emerald); }
-    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    /* 22px of bars in a 44x44 hit box. padding grows the button to 44x44 while
+       the negative margin gives back exactly what the padding added, so the
+       footprint in the flex row stays the 30x24 it has always been and the bar
+       height does not move — the logo is text at ~26-30px on seven of nine
+       sites, so a real 44px button would have grown every one of those bars.
+       z-index keeps the hit area above the neighbouring link where the two
+       overlap by 7px; the neighbour is ~77px wide and loses only its edge.
+       appearance/background/border are the UA reset — without them a <button>
+       renders Chrome's grey buttonface on a dark navbar, which is what the
+       root site was shipping on 2026-09-03. The other eight already reset it. */
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: 0; appearance: none; -webkit-appearance: none; color: inherit; position: relative; z-index: 1; padding: 14px 11px; margin: -10px -7px; }
     .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--muted); border-radius: 2px; transition: all 0.2s; }
     /* top:100% is measured off <nav> itself, so it cannot disagree with the bar.
        The six sites that positioned this menu each hardcoded a top of 58-62px
