@@ -371,8 +371,7 @@
       color: var(--emerald); text-decoration: none;
       padding: 0.5rem 1rem;
       border: 1px solid var(--border); border-radius: 6px;
-      transition: border-color 0.2s;
-    }
+      transition: border-color 0.2s; overflow-wrap: anywhere; }
     .contact-email:hover { border-color: var(--emerald); }
 
     /* FOOTER */
@@ -492,3 +491,18 @@ a:focus-visible, button:focus-visible, input:focus-visible,
 .nf-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 5vw, 3rem); }
 .nf-body { color: var(--muted); max-width: 46ch; line-height: 1.7; }
 .nf-back { color: var(--white); }
+
+/* Contact address fit, added 2026-09-03. Measured on a 360px viewport with the
+   shipped DM Mono (0.6em advance, 25 chars at 0.95rem = 228.0px of text):
+   clip-trimmer, compress, games, milife and services had 208px of room and
+   overflowed their card by 20px, visible on both borders because an
+   inline-block cannot break at its own padding. Root cleared by 1.2px a side.
+   The cause was a missing mobile override — root and ai-crypto reduce
+   .contact-box padding below 768px; the other six kept the 2.5rem desktop
+   value. These values give +20px at 360px.
+   lockedpages is deliberately NOT here: it uses .contact-email-text on a
+   <span>, a different element with a different rule. R30 — exception, written. */
+@media (max-width: 768px) {
+  .contact-box { padding: 1.5rem; }
+  .contact-email { display: block; margin: 0.4rem 0; padding: 0.5rem 0.75rem; }
+}
