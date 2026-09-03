@@ -2,7 +2,7 @@
     :root{
       --bg:#0F172A;--surface:#1E293B;
       --emerald:#10B981;--em-glow:rgba(16,185,129,0.15);--em-glow2:rgba(16,185,129,0.07);
-      --white:#F8FAFC;--muted:#94A3B8;--border:rgba(16,185,129,0.2)
+      --white:#F8FAFC;--muted:#94A3B8;--muted-dim:#8A97A8;--border:rgba(16,185,129,0.2)
     }
     body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;line-height:1.8}
     nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.25rem 5%;background:rgba(15,23,42,0.9);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
@@ -30,7 +30,7 @@
     .footer-links{display:flex;gap:1.5rem;flex-wrap:wrap}
     .footer-links a{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
     .footer-links a:hover{color:var(--emerald)}
-    .footer-copy{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted);opacity:.5}
+    .footer-copy{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted-dim);}
     @media(max-width:768px){.wrap{padding:7rem 5% 4rem}.meta{flex-direction:column;gap:.5rem}footer{flex-direction:column;text-align:center}}
   
 /* Brand accent for footer logo span */
