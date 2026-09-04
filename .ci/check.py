@@ -81,14 +81,24 @@ for p in CSS:
 # 3 — Contrast. opacity on already-tuned text is what put the copyright line on
 #     every page at 2.69:1. --muted-dim exists so it never needs to happen again.
 #
-#     THIS GUARD MATCHED NOTHING FOR THIRTEEN MONTHS. It was written 2026-07-26
-#     against the file that had just been fixed, which spells the value
-#     `opacity: 0.5`. Every legal stylesheet on the platform writes `opacity:.5`
-#     with no leading zero, so `0\.[1-8]` could not match one of them. Measured
-#     2026-09-03: the old pattern scored 0 hits platform-wide while 13 rules sat
-#     live at 2.69:1 -- on every legal page of every origin, for the whole period
-#     the check was reporting clean. A guard that has never fired is not coverage;
-#     it is a claim nobody tested (R34/R35).
+#     THIS GUARD MATCHED NOTHING FOR 39 DAYS. It was written 2026-07-26 against
+#     the file that had just been fixed, which spells the value `opacity: 0.5`.
+#     Every legal stylesheet on the platform writes `opacity:.5` with no leading
+#     zero, so `0\.[1-8]` could not match one of them. Measured 2026-09-03: the old
+#     pattern scored 0 hits platform-wide while 13 rules sat live at 2.69:1 -- on
+#     every legal page of every origin, for the whole period the check was
+#     reporting clean. A guard that has never fired is not coverage; it is a claim
+#     nobody tested (R34/R35).
+#
+#     CORRECTION 2026-09-04 (R25 -- recorded, not silently deleted): the sentence
+#     above read "THIRTEEN MONTHS" until today, and that was false by a factor of
+#     10. 2026-07-26 to 2026-09-03 is 39 days, i.e. 1.3 months. The likely origin
+#     is "1.3 months" corrupted to "thirteen months", helped by the genuine 13 in
+#     "13 rules" three lines up -- which IS correct and was verified separately.
+#     Nobody did the subtraction, and the wrong figure was believed precisely
+#     because it was specific: it reached nine copies of this file, two backlog
+#     entries and eight commit messages before it was checked. R44 -- a duration
+#     is a quoted metric and carries its arithmetic. Do the subtraction.
 #
 #     `0?\.` accepts both spellings. `[0-8]\d*` additionally catches .05 and .07,
 #     which the old `[1-8]` would also have missed. .9x is deliberately NOT
