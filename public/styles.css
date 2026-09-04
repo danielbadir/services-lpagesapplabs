@@ -71,7 +71,15 @@
        The six sites that positioned this menu each hardcoded a top of 58-62px
        against bars computing to 62-71px, so every one tucked the menu's first few
        pixels behind a blurred bar. There is no number here to go stale.
-       Requires #navMobile to be a CHILD of nav — see index.html. */
+       Requires #navMobile to be a CHILD of nav — see index.html.
+       No z-index here, deliberately. nav is position:fixed with z-index:100, so IT
+       establishes the stacking context this menu lives in and lifts the whole bar
+       above page content. Inside that context the menu is absolute at top:100% --
+       strictly below the bar -- so it overlaps no sibling and has nothing to order
+       against. Six of nine sites carried z-index:99 here until 2026-09-04; it was
+       inert on all six, left over from when this menu was a sibling of nav rather
+       than its child. Do not re-add it: if the menu ever DOES need to stack, the
+       thing to change is nav's 100, not a number on the child. */
     .nav-mobile { display: none; flex-direction: column; gap: 0; background: rgba(15,23,42,0.97); border-top: 1px solid var(--border); padding: 1rem 5%; position: absolute; top: 100%; left: 0; right: 0; }
     .nav-mobile a { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); transition: color 0.2s; }
     .nav-mobile a:last-child { border-bottom: none; }
