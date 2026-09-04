@@ -1,3 +1,21 @@
+# No `preload` token on Strict-Transport-Security, deliberately. The token is a
+# standing consent to the HSTS preload list, and joining that list is a one-way
+# door: removal runs on browser release cycles, months, and nothing accelerates
+# it. Measured 2026-09-04: the domain is fully eligible (hstspreload.org
+# preloadable API returns zero errors and zero warnings) -- so this is a decision,
+# not a blocker. It is declined because the benefit expires before the commitment
+# does. Chrome 147 (April 2026) already made HTTPS-First the default for Enhanced
+# Safe Browsing users, 1bn+, and Chrome 154 (October 2026) makes it the default
+# for everyone; the browser now warns before loading a public HTTP site instead of
+# silently falling back, which is the gap preload existed to close. What is left
+# at risk here is static marketing content -- 38 pages, zero password fields, zero
+# file handling, zero binary or store links -- so the residue does not justify a
+# permanent constraint on every future subdomain of lpagesapplabs.com.
+#
+# Re-add this token ONLY in the same change as an actual submission at
+# hstspreload.org. The token alone does nothing; the submission alone is what
+# binds you. Revisit if any site here ever grows a login, a session cookie or a
+# customer area -- that is the trigger that makes preload worth its permanence.
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
@@ -5,4 +23,4 @@
   Cross-Origin-Opener-Policy: same-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=(), browsing-topics=(), join-ad-interest-group=(), run-ad-auction=()
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data: https://lpagesapplabs.com; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'
-  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
