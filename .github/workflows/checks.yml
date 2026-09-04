@@ -43,6 +43,23 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         with:
           python-version: '3.12'
+      - name: JavaScript must parse
+        # Added 2026-09-04. check.py treats .js as TEXT -- substring matching only,
+        # no parser, no AST. A stray brace in main.js shipped with a fully green
+        # build, and nothing downstream would notice until a person opened the page.
+        # That is the same class as the 2026-07-27 blank-page outage on all nine
+        # origins, which was found by the owner looking at the site.
+        # node is preinstalled on ubuntu-latest, so this adds no dependency.
+        run: |
+          shopt -s nullglob
+          files=(public/*.js)
+          # Assert the input before trusting the output (R24): an empty glob would
+          # make this step pass silently and read exactly like a clean tree.
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "::error::no .js files found under public/ — this check is blind"; exit 2
+          fi
+          for f in "${files[@]}"; do node --check "$f" || exit 1; done
+          echo "parsed ${#files[@]} JavaScript file(s) with node --check"
       - name: Static checks (CSP integrity, links, legal freshness, a11y basics, HTML structure)
         run: python3 .ci/check.py
 

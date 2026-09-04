@@ -104,11 +104,20 @@ for p in CSS:
 #     which the old `[1-8]` would also have missed. .9x is deliberately NOT
 #     flagged: near-opaque, and composites above 4.5:1 on these grounds.
 #
-#     Deliberately NOT widened to any `color:` declaration. Doing so picks up
-#     .chip-sub { color: inherit; opacity: 0.7 } in public/styles.css, whose
-#     composite cannot be computed statically -- the guard could not judge it and
-#     would be crying wolf on code that may well be correct (R35). That one is in
-#     the backlog for manual review instead.
+#     Deliberately NOT widened to any `color:` declaration -- a bare `color:` with
+#     an opacity cannot be resolved statically here, because the composite depends
+#     on the PARENT's background, which this scanner does not track.
+#
+#     CORRECTION 2026-09-04. This paragraph previously named
+#     .chip-sub { color: inherit; opacity: 0.7 } as an example and said the guard
+#     "would be crying wolf on code that may well be correct". It was not correct.
+#     Computed with alpha compositing: 4.04:1, against a 4.5:1 floor, at 10px, live
+#     on ai-crypto-highflags. The exclusion was written 2026-09-03 and deferred to a
+#     manual review that had not happened. It is now 0.9 = 5.71:1.
+#     The lesson is not that the exclusion was wrong -- a static scanner genuinely
+#     cannot composite through an untracked parent -- it is that "the checker cannot
+#     judge this" was allowed to read as "this is probably fine". An exclusion is a
+#     KNOWN GAP and needs an owner and a date, not a reassuring sentence (R55).
 #
 #     Validated 2026-09-03 against the 13 real surviving instances, not a
 #     synthetic defect: the new pattern flagged all 13 before the fix and 0 after,

@@ -1,0 +1,71 @@
+<svg width="640" height="175" viewBox="50 50 640 175" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .logo-bg { fill: #0F172A; }
+      .lp { font-family: 'Syne', 'DM Sans', sans-serif; font-weight: 800; font-size: 42px; fill: #10B981; letter-spacing: -1px; }
+      .rest { font-family: 'Syne', 'DM Sans', sans-serif; font-weight: 800; font-size: 42px; fill: #F8FAFC; letter-spacing: -1px; }
+      .tagline { font-family: 'DM Mono', monospace; font-size: 11px; fill: #94A3B8; letter-spacing: 0.18em; text-transform: uppercase; }
+      .bracket { fill: none; stroke: #10B981; stroke-width: 1.5; opacity: 0.5; stroke-linecap: round; }
+    </style>
+  </defs>
+
+  <!-- background removed — transparent so logo is visible on dark nav -->
+
+  <!-- Outer glow rings -->
+  <circle cx="130" cy="160" r="98" fill="none" stroke="#10B981" stroke-width="0.5" opacity="0.12"/>
+  <circle cx="130" cy="160" r="78" fill="none" stroke="#10B981" stroke-width="0.5" opacity="0.18"/>
+
+  <!-- Hexagon fill -->
+  <polygon points="130,88 172,112 172,160 130,184 88,160 88,112"
+    fill="#10B981" fill-opacity="0.12"
+    stroke="#10B981" stroke-width="2.5"/>
+
+  <!-- Inner hexagon -->
+  <polygon points="130,108 152,120 152,148 130,160 108,148 108,120"
+    fill="none" stroke="#10B981" stroke-width="1" opacity="0.35"/>
+
+  <!-- Center node -->
+  <circle cx="130" cy="136" r="9" fill="#10B981"/>
+  <circle cx="130" cy="136" r="14" fill="none" stroke="#10B981" stroke-width="1.5" opacity="0.4"/>
+  <circle cx="130" cy="136" r="20" fill="none" stroke="#10B981" stroke-width="0.5" opacity="0.2"/>
+
+  <!-- Connections from center to hex vertices -->
+  <line x1="130" y1="136" x2="130" y2="88" stroke="#10B981" stroke-width="1.5" opacity="0.8"/>
+  <line x1="130" y1="136" x2="172" y2="112" stroke="#10B981" stroke-width="1" opacity="0.45"/>
+  <line x1="130" y1="136" x2="172" y2="160" stroke="#10B981" stroke-width="1" opacity="0.35"/>
+  <line x1="130" y1="136" x2="130" y2="184" stroke="#10B981" stroke-width="1" opacity="0.3"/>
+  <line x1="130" y1="136" x2="88" y2="160" stroke="#10B981" stroke-width="1" opacity="0.35"/>
+  <line x1="130" y1="136" x2="88" y2="112" stroke="#10B981" stroke-width="1.5" opacity="0.7"/>
+
+  <!-- Vertex dots -->
+  <circle cx="130" cy="88" r="5" fill="#10B981" opacity="0.9"/>
+  <circle cx="172" cy="112" r="4" fill="#10B981" opacity="0.6"/>
+  <circle cx="172" cy="160" r="4" fill="#10B981" opacity="0.5"/>
+  <circle cx="130" cy="184" r="4" fill="#10B981" opacity="0.5"/>
+  <circle cx="88"  cy="160" r="4" fill="#10B981" opacity="0.5"/>
+  <circle cx="88"  cy="112" r="4" fill="#10B981" opacity="0.7"/>
+
+  <!-- Outer satellite dots -->
+  <circle cx="130" cy="64"  r="3" fill="#10B981" opacity="0.35"/>
+  <circle cx="70"  cy="88"  r="2.5" fill="#10B981" opacity="0.25"/>
+  <circle cx="70"  cy="178" r="2.5" fill="#10B981" opacity="0.2"/>
+  <circle cx="190" cy="88"  r="2.5" fill="#10B981" opacity="0.25"/>
+  <circle cx="190" cy="178" r="2.5" fill="#10B981" opacity="0.2"/>
+  <line x1="130" y1="88" x2="130" y2="64" stroke="#10B981" stroke-width="0.75" opacity="0.25"/>
+  <line x1="88"  y1="112" x2="70"  y2="88" stroke="#10B981" stroke-width="0.75" opacity="0.2"/>
+  <line x1="172" y1="112" x2="190" y2="88" stroke="#10B981" stroke-width="0.75" opacity="0.2"/>
+
+  <!-- Brackets -->
+  <path d="M214,108 L206,108 L206,156 L214,156" class="bracket"/>
+  <path d="M625,108 L633,108 L633,156 L625,156" class="bracket"/>
+
+  <!-- Text -->
+  <text x="228" y="158" class="lp">LPAGES</text>
+  <text x="424" y="158" class="rest">APPLABS</text>
+
+  <text x="228" y="200" text-anchor="start" class="tagline">Secure Apps · Modern Infrastructure</text>
+
+  <line x1="228" y1="214" x2="625" y2="214" stroke="#10B981" stroke-width="0.5" opacity="0.3"/>
+  <circle cx="228" cy="214" r="2" fill="#10B981" opacity="0.3"/>
+  <circle cx="625" cy="214" r="2" fill="#10B981" opacity="0.3"/>
+</svg>
