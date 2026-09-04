@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# The platform publishes ONE sitemap, at the apex, covering all nine origins
+# (29 URLs = 29 indexable pages across the platform; the nine 404.html files are
+# correctly excluded). Declaring it here is what makes it discoverable from this
+# origin: a crawler that arrives on this subdomain and never visits the apex
+# would otherwise never learn the sitemap exists.
+#
+# Cloudflare PREPENDS a managed block to this file (AI-crawler directives and a
+# Content-Signal reservation of rights under EU Directive 2019/790 Art. 4). That
+# block is not authored here and is not in version control -- it is an account
+# setting. This file is the part we control, and it survives underneath it.
+Sitemap: https://lpagesapplabs.com/sitemap.xml
