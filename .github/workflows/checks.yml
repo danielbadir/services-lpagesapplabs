@@ -21,6 +21,14 @@ on:
     branches: [main, subdomeniu1]
   pull_request:
   workflow_dispatch:
+# Least privilege, declared here rather than inherited. The repository default is
+# currently `read`, which is correct -- but that is an ACCOUNT setting, flipped in
+# one click and invisible from the code. Declaring it in the workflow pins it in
+# version control where a reviewer can see it, and it survives someone changing
+# the default later. Both jobs below only read the tree: they run a Python script
+# and grep the checkout. Nothing here writes, comments, or publishes.
+permissions:
+  contents: read
 
 jobs:
   static:
