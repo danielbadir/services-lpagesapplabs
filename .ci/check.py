@@ -9,7 +9,7 @@ dependencies: this site has no build step and the checks should not add one.
 Run:  python3 .ci/check.py
 Exit: 0 clean, 1 failures.
 """
-import io, os, re, sys, glob, datetime
+import io, os, re, sys, subprocess, datetime
 
 FAIL = []
 WARN = []
@@ -17,10 +17,33 @@ WARN = []
 def fail(rule, path, msg):  FAIL.append((rule, path, msg))
 def warn(rule, path, msg):  WARN.append((rule, path, msg))
 
-HTML = sorted(glob.glob("**/*.html", recursive=True))
-CSS  = sorted(glob.glob("**/*.css",  recursive=True))
-HTML = [p for p in HTML if ".ci/" not in p]
-CSS  = [p for p in CSS  if ".ci/" not in p]
+# Collected from the TRACKED TREE, not the filesystem. This used to glob the
+# working directory, so local runs and CI scanned different files. Measured
+# 2026-09-04 on the same commit: locally 38 HTML / 34 CSS -> exit 0 with 4
+# warnings; in CI 5 HTML / 3 CSS -> exit 1 with a different warning and a
+# failure. The two finding sets had NOTHING in common. The 33 extra files are
+# sites/*, gitignored here because each is its own repo with its own CI running
+# this same script over its own files -- so nothing is lost by excluding them.
+# Worse than the noise: a real finding about THIS repo (an orphaned asset) was
+# invisible on the author's machine, because a sibling repo referenced the file.
+# git ls-files is exactly what CI checks out, so local == CI by construction.
+_TRACKED = subprocess.run(["git", "ls-files"],
+                          capture_output=True, text=True).stdout.split()
+HTML = sorted(p for p in _TRACKED if p.endswith(".html") and ".ci/" not in p)
+CSS  = sorted(p for p in _TRACKED if p.endswith(".css")  and ".ci/" not in p)
+
+# Assert the input before trusting any output (R24). Every loop below iterates
+# over HTML or CSS. If collection returns nothing -- no git on PATH, the cwd not
+# the repo root, an export with no .git -- all of them run zero times and this
+# script exits 0 on an empty scan, which reads exactly like a clean tree.
+# Until 2026-09-04 the only thing standing between that and a false green was
+# check 13's own floor: one check incidentally protecting the whole file, and
+# deleting it would have silently disarmed the other twelve. Exit 2, not 1, so a
+# broken instrument is distinguishable from a failing tree.
+if not HTML:
+    print("BROKEN: no tracked HTML found. Is this a git checkout, and is the cwd "
+          "the repository root? Believe nothing below.")
+    sys.exit(2)
 
 def read(p): return io.open(p, encoding="utf-8").read()
 
@@ -57,11 +80,34 @@ for p in CSS:
 
 # 3 — Contrast. opacity on already-tuned text is what put the copyright line on
 #     every page at 2.69:1. --muted-dim exists so it never needs to happen again.
+#
+#     THIS GUARD MATCHED NOTHING FOR THIRTEEN MONTHS. It was written 2026-07-26
+#     against the file that had just been fixed, which spells the value
+#     `opacity: 0.5`. Every legal stylesheet on the platform writes `opacity:.5`
+#     with no leading zero, so `0\.[1-8]` could not match one of them. Measured
+#     2026-09-03: the old pattern scored 0 hits platform-wide while 13 rules sat
+#     live at 2.69:1 -- on every legal page of every origin, for the whole period
+#     the check was reporting clean. A guard that has never fired is not coverage;
+#     it is a claim nobody tested (R34/R35).
+#
+#     `0?\.` accepts both spellings. `[0-8]\d*` additionally catches .05 and .07,
+#     which the old `[1-8]` would also have missed. .9x is deliberately NOT
+#     flagged: near-opaque, and composites above 4.5:1 on these grounds.
+#
+#     Deliberately NOT widened to any `color:` declaration. Doing so picks up
+#     .chip-sub { color: inherit; opacity: 0.7 } in public/styles.css, whose
+#     composite cannot be computed statically -- the guard could not judge it and
+#     would be crying wolf on code that may well be correct (R35). That one is in
+#     the backlog for manual review instead.
+#
+#     Validated 2026-09-03 against the 13 real surviving instances, not a
+#     synthetic defect: the new pattern flagged all 13 before the fix and 0 after,
+#     and reverting sites/services/public/privacy.css alone turns it red again.
 for p in CSS:
     for m in re.finditer(r'\{([^{}]*)\}', read(p)):
         body = m.group(1)
-        if re.search(r'opacity:\s*0\.[1-8]', body) and re.search(r'color:\s*var\(--(muted|emerald|orange|cyan|violet)\)', body):
-            fail("contrast-opacity", p, "text dimmed with opacity — use --muted-dim: %s" % body.strip()[:60])
+        if re.search(r'(?<![-\w])opacity:\s*0?\.[0-8]\d*', body) and re.search(r'color:\s*var\(--(muted|emerald|orange|cyan|violet)\)', body):
+            fail("contrast-opacity", p, "text dimmed with opacity — use --muted-dim: %s" % ' '.join(body.split())[:60])
     if re.search(r'outline:\s*(none|0)', read(p)):
         fail("focus-removed", p, "outline:none removes the focus indicator")
 
@@ -85,7 +131,11 @@ for p in HTML:
 # 6 — Orphaned assets. 1.39 MB of unreferenced images were shipping, including two
 #     655 KB PNGs used as icons.
 refs = " ".join(read(p) for p in HTML + CSS)
-for asset in glob.glob("**/*.png", recursive=True) + glob.glob("**/*.svg", recursive=True):
+# Tracked tree, same as HTML/CSS above. Scoping only those two and leaving this
+# one on the filesystem was tested and produced FOUR false orphans: tracked pages
+# no longer referenced untracked sibling assets, so sibling files read as unused.
+# A control applied to two of three collection sites is not applied (R38).
+for asset in [p for p in _TRACKED if p.endswith((".png", ".svg"))]:
     if os.path.basename(asset) not in refs:
         warn("orphan-asset", asset, "%d bytes, no reference" % os.path.getsize(asset))
 
@@ -294,6 +344,98 @@ for p in HTML:
     # Applied at runtime by main.js rather than authored in the markup.
     for c in sorted(used - defined - {"visible", "js", "active", "open", "reveal"}):
         warn("css-class-drift", p, ".%s is used but no stylesheet this page loads defines it" % c)
+
+# 13 — Mobile menu containment. PER-REPO, like every other rule here.
+#
+#      It was written on 2026-09-03 calling itself "the platform's first
+#      CROSS-SIBLING check", and that claim is retired as of 2026-09-04 because it
+#      was never true in the environment that matters. CI checks out ONE repo;
+#      sites/ is gitignored and absent. The check only ever saw nine sites on the
+#      author's disk, and probes A and B below were run against sites/services and
+#      sites/blog -- files this repository does not contain. That is also exactly
+#      why CI went red on the day it was added and stayed red for three runs: the
+#      floor was set to 3 because the author's machine found 9.
+#
+#      Cross-sibling comparison needs a tool that has all nine trees at once, or a
+#      review pass. It cannot live in one repo's pipeline, and pretending it does
+#      produces a check that is green locally and red in CI for the same commit.
+#
+#      The defect it was built for was real. On 2026-09-03 six sites positioned .nav-mobile
+#      fixed at a hardcoded 58/60/62px while root, services and ai left it in
+#      static flow. <nav> is position:fixed, so a static sibling lands at document
+#      y=0 behind the bar — the menu opened off-screen and the only navigation on
+#      a phone did nothing on three of nine origins, including the apex. The six
+#      that "worked" were each 4-9px short of their own bar height.
+#
+#      The invariant removes the number rather than checking it: #navMobile is a
+#      CHILD of <nav>, and .nav-mobile is absolute at top:100%, which resolves
+#      against the bar itself and cannot disagree with it.
+#
+#      Validated 2026-09-03 against the two real shipped forms, not a synthetic
+#      reproduction — both are still in this repo's history:
+#        A  services reverted (static, no position)  -> both messages, exit 1
+#        B  blog CSS reverted (fixed, top:58px)      -> nav-menu-position, exit 1
+#        C  the id renamed so nothing matches        -> the blind-scan failure
+#      Green before and after each, 0 failures.
+#
+#      The first probe run crashed instead of failing: "top: 100% }" inside a
+#      %-format string raised ValueError, and because that line only executes
+#      when something is already broken, a green tree would never have reached
+#      it. The check would have gone to CI looking correct and died the moment
+#      it found its first defect. Hence probe A — a check that has never been
+#      seen red has not been seen at all.
+#
+#      The floor below is the R24 habit: a check whose input is empty passes
+#      silently and reads exactly like a clean tree, so it reports BROKEN.
+menus = 0
+for p in HTML:
+    s = read(p)
+    if 'id="navMobile"' not in s:
+        continue
+    menus += 1
+    i = s.find('id="navMobile"')
+    inside = any(m.start() < i < m.end()
+                 for m in re.finditer(r'<nav\b.*?</nav>', s, re.S))
+    if not inside:
+        fail("nav-menu-containment", p,
+             "#navMobile is outside <nav>; nav is position:fixed so a sibling "
+             "lands at document y=0, behind the bar and off-screen once scrolled")
+    css_text = ""
+    for sheet in re.findall(r'<link[^>]*rel="stylesheet"[^>]*href="([^"]+)"', s):
+        f = os.path.join(os.path.dirname(p), sheet)
+        if os.path.exists(f):
+            css_text += read(f)
+    m = re.search(r'(?:^|[},])\s*\.nav-mobile\s*\{([^}]*)\}', css_text, re.M)
+    if not m:
+        fail("nav-menu-position", p, "no .nav-mobile rule in any stylesheet this page loads")
+        continue
+    body = m.group(1)
+    # (?<![-\w]) or `top:` matches inside `border-top:`. A plain \b does not help:
+    # the hyphen is itself a word boundary. This cost eight corrupted stylesheets.
+    top = re.search(r'(?<![-\w])top\s*:\s*([^;]+)', body)
+    pos = re.search(r'(?<![-\w])position\s*:\s*([\w-]+)', body)
+    if not pos or pos.group(1) != "absolute" or not top or top.group(1).strip() != "100%":
+        fail("nav-menu-position", p,
+             "expected .nav-mobile { position: absolute; top: 100%% } — got position:%s top:%s. "
+             "A hardcoded px offset goes stale the moment the logo height changes."
+             % (pos.group(1) if pos else "none", top.group(1).strip() if top else "none"))
+
+# Floor of 1, not 3. In a single-site repo `menus` is 0 or 1, so 1 is the exact
+# boundary between "the scan found the page" and "the scan found nothing". The
+# old 3 was the author's local count across nine repos and could never be reached
+# by any repo running this in CI -- it would fail all nine permanently (R28).
+#
+# Probed 2026-09-04, with the floor at 1 and the tree green: renaming navMobile
+# consistently across index.html, main.js and styles.css -- which leaves the site
+# working perfectly -- turns this red at menus=0 and NOTHING ELSE catches it.
+# Check 11 stays silent because the rename leaves no dangling aria-controls, and
+# that silence was confirmed to be a real result, not a dead check, by breaking a
+# reference on purpose and watching html-structure fire. So this guard is the only
+# detection of "the checker went blind", which is why it earns its place.
+if menus < 1:
+    fail("nav-menu-containment", ".ci/check.py",
+         "only %d page(s) with a mobile menu found — the scan is blind, "
+         "believe nothing above" % menus)
 
 def report(items, label):
     if not items: return
