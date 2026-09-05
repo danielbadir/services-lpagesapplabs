@@ -107,6 +107,36 @@ jobs:
           fi
           echo "no internal documents tracked"
 
+      - name: No second origin — GitHub Pages must stay disabled
+        # R23/R38. Cloudflare Pages serves this repo with the full `_headers`
+        # posture. GitHub Pages, if switched on, serves the SAME committed files
+        # from github.io — and it supports no `_headers`, no `.htaccess` and no
+        # header config of any kind, so that gap cannot be closed in place. The
+        # only way to close it is to stay off.
+        #
+        # Found live 2026-09-04 on two of the nine repos (ai-crypto-highflags and
+        # services), enabled at some point and forgotten. Root URLs 404, but one
+        # path deeper the whole site was live: /public/index.html 200, and
+        # /public/privacy.html 200 carrying the company registration number —
+        # with no CSP, no frame-ancestors, no nosniff, no Referrer-Policy, no
+        # Permissions-Policy and no COOP. Deleting the two was a one-time fix
+        # that nothing guarded; this step is the control that outlives it.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          hp=$(gh api "repos/$GITHUB_REPOSITORY" --jq '.has_pages' 2>/dev/null)
+          # R24: an unreadable field must report BROKEN, never PASS. Without this
+          # case, an auth failure returns empty — and empty is not "false".
+          case "$hp" in
+            true|false) ;;
+            *) echo "::error::BROKEN — could not read .has_pages (got '$hp'). Believe nothing below."; exit 2 ;;
+          esac
+          if [ "$hp" = "true" ]; then
+            echo "::error::GitHub Pages is ENABLED — a second origin is serving this repo without _headers. Close it with: gh api -X DELETE repos/$GITHUB_REPOSITORY/pages"
+            exit 1
+          fi
+          echo "GitHub Pages disabled — single origin confirmed"
+
 # The live-header assertion that used to live here was removed 2026-07-27.
 # Cloudflare serves a bot challenge to GitHub Actions runners, so it failed on
 # every single run since it was added — the site was correct the whole time.
