@@ -58,6 +58,11 @@
   <link rel="preload" href="fonts/syne-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/dm-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
+  <!-- defer, deliberately. This script queries the DOM immediately on boot, and a
+       head script that runs before the body exists is what blanked all nine origins
+       on 2026-07-27. It is also progressive enhancement: the panel ships with honest
+       static values and this only ever upgrades a row to "measured". -->
+  <script src="posture.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -533,6 +538,53 @@
 
     <p class="work-copyright">© LPagesAppLabs S.R.L. · Scenarios, not client work — no engagement is described above</p>
 
+  </div>
+</section>
+
+<!-- SECURITY POSTURE — measured live, see posture.js -->
+<section id="posture">
+  <div class="posture-header reveal">
+    <div class="section-label">Verifiable, Not Claimed</div>
+    <h2 class="section-title">Security Posture, Measured Live</h2>
+    <p>We are asking you to let us build something you will be responsible for. This is the standard we hold our own pages to, read out of the page you are reading right now by your own browser. Open devtools and check any line of it.</p>
+  </div>
+
+  <dl class="posture-grid reveal">
+    <div class="posture-row" data-posture="third-party">
+      <dt class="posture-label">Third-party origins loaded</dt>
+      <dd class="posture-value">0</dd>
+      <dd class="posture-note">No fonts, analytics or tag manager loaded from another host</dd>
+    </div>
+    <div class="posture-row" data-posture="cookies">
+      <dt class="posture-label">Cookies set</dt>
+      <dd class="posture-value">0</dd>
+      <dd class="posture-note">No consent banner, because there is nothing to consent to</dd>
+    </div>
+    <div class="posture-row" data-posture="storage">
+      <dt class="posture-label">Browser storage entries</dt>
+      <dd class="posture-value">0</dd>
+      <dd class="posture-note">Nothing written to localStorage or sessionStorage</dd>
+    </div>
+    <div class="posture-row" data-posture="csp">
+      <dt class="posture-label">Content Security Policy</dt>
+      <dd class="posture-value">default-src 'self'</dd>
+      <dd class="posture-note">No unsafe-inline, no unsafe-eval, no external origin permitted</dd>
+    </div>
+    <div class="posture-row" data-posture="hsts">
+      <dt class="posture-label">HTTPS enforcement</dt>
+      <dd class="posture-value">2-year</dd>
+      <dd class="posture-note">Strict-Transport-Security with includeSubDomains</dd>
+    </div>
+    <div class="posture-row" data-posture="permissions">
+      <dt class="posture-label">Capabilities denied</dt>
+      <dd class="posture-value">9</dd>
+      <dd class="posture-note">Camera, microphone, geolocation, payment, USB and ad-topics APIs</dd>
+    </div>
+  </dl>
+
+  <div class="posture-foot reveal">
+    <p class="posture-stamp">The values above are the ones we ship. With JavaScript enabled they are replaced by what your own browser actually observed<span class="posture-time-wrap">, measured at <span data-posture-time>—</span></span>. A row turns red if reality disagrees with us.</p>
+    <p class="posture-links"><a href="https://lpagesapplabs.com/company.html">Who we are, on the record</a> · <a href="https://blog.lpagesapplabs.com" rel="noopener noreferrer">How we build it ↗</a></p>
   </div>
 </section>
 

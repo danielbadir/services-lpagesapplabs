@@ -6,6 +6,12 @@
       --emerald-glow: rgba(16,185,129,0.15);
       --emerald-glow2: rgba(16,185,129,0.07);
       --cyan: #22D3EE;
+      /* Added for the posture panel. The -aNN / -glow2 tints are their base colour
+         at 0.07, so changing a base without its tint leaves a row on the old hue.
+         Values are the apex platform's, so the panel is one design across all
+         nine origins rather than nine variants of one idea. */
+      --danger: #F87171;
+      --danger-a07: rgba(248,113,113,0.07);
       --white: #F8FAFC; --muted: #94A3B8; --muted-dim: #8A97A8;
       --border: rgba(16,185,129,0.18);
     }
@@ -513,4 +519,61 @@ a:focus-visible, button:focus-visible, input:focus-visible,
 @media (max-width: 768px) {
   .contact-box { padding: 1.5rem; }
   .contact-email { display: block; margin: 0.4rem 0; padding: 0.5rem 0.75rem; }
+}
+
+/* --- SECURITY POSTURE PANEL -------------------------------------------------
+   Rows ship with static values and are upgraded to measured ones by posture.js.
+   .posture-measured is added only after a real measurement, so the "measured"
+   affordance can never appear on a value nobody checked. .posture-fail exists
+   so the panel can contradict us in public — a panel that can only ever show
+   good news is marketing, not evidence. */
+#posture { max-width: 1100px; margin: 0 auto; padding: 6rem 1.5rem 2rem; }
+.posture-header { text-align: center; margin-bottom: 3rem; }
+.posture-header p { color: var(--muted-dim); max-width: 60ch; margin: 1rem auto 0; line-height: 1.7; }
+
+.posture-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+
+.posture-row {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--muted-dim);
+  border-radius: 8px;
+  padding: 1.25rem 1.4rem;
+}
+.posture-grid dt, .posture-grid dd { margin: 0; }
+.posture-label { font-size: 0.8rem; color: var(--muted-dim); letter-spacing: 0.02em; }
+.posture-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.6rem;
+  color: var(--white);
+  margin: 0.4rem 0 0.5rem;
+  word-break: break-word;
+}
+.posture-note { font-size: 0.75rem; color: var(--muted-dim); line-height: 1.55; }
+
+/* Measured — the only state that earns the accent colour and the tick. */
+.posture-measured { border-left-color: var(--emerald); background: var(--emerald-glow2); }
+.posture-measured .posture-value { color: var(--emerald); }
+.posture-measured .posture-label::after {
+  content: ' ✓ measured';
+  color: var(--emerald);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+}
+/* Reality disagreed with the shipped value. Deliberately loud. */
+.posture-fail { border-left-color: var(--danger); background: var(--danger-a07); }
+.posture-fail .posture-value { color: var(--danger); }
+.posture-fail .posture-label::after { content: ' ✕ failed'; color: var(--danger); }
+
+.posture-foot { margin-top: 2.5rem; text-align: center; }
+.posture-stamp { font-size: 0.78rem; color: var(--muted-dim); max-width: 68ch; margin: 0 auto; line-height: 1.7; }
+.posture-time-wrap { font-family: 'DM Mono', monospace; }
+.posture-links { margin-top: 1rem; font-size: 0.8rem; }
+.posture-links a { color: var(--emerald); text-decoration: none; border-bottom: 1px solid transparent; }
+.posture-links a:hover, .posture-links a:focus-visible { border-bottom-color: var(--emerald); }
+
+@media (max-width: 640px) {
+  #posture { padding-top: 4rem; }
+  .posture-value { font-size: 1.3rem; }
 }
