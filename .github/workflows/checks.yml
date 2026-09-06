@@ -50,16 +50,28 @@ jobs:
         # That is the same class as the 2026-07-27 blank-page outage on all nine
         # origins, which was found by the owner looking at the site.
         # node is preinstalled on ubuntu-latest, so this adds no dependency.
+        #
+        # COLLECTS FROM THE TRACKED TREE, not a glob -- corrected 2026-09-06.
+        # This step originally used `files=(public/*.js)`, written in the SAME
+        # session in which .ci/check.py was converted away from glob() to
+        # `git ls-files` for exactly this reason. `public/*.js` is not recursive,
+        # so a tracked public/js/foo.js would be skipped silently while the step
+        # still found other files and exited 0 -- the failure looks like success.
+        # Harmless on the day it was written only because every repo happened to
+        # keep its JavaScript flat; that is a coincidence, not a control (R29/R54).
         run: |
-          shopt -s nullglob
-          files=(public/*.js)
-          # Assert the input before trusting the output (R24): an empty glob would
+          # Portable collector: `mapfile` is bash 4+, and this repository's own
+          # author machine runs bash 3.2, so mapfile could not be executed even
+          # once before shipping. A step whose whole purpose is not being
+          # silently broken must not itself be untestable (R24).
+          files=(); while IFS= read -r l; do files+=("$l"); done < <(git ls-files '*.js')
+          # Assert the input before trusting the output (R24): an empty list would
           # make this step pass silently and read exactly like a clean tree.
           if [ ${#files[@]} -eq 0 ]; then
-            echo "::error::no .js files found under public/ — this check is blind"; exit 2
+            echo "::error::no tracked .js files found — this check is blind"; exit 2
           fi
           for f in "${files[@]}"; do node --check "$f" || exit 1; done
-          echo "parsed ${#files[@]} JavaScript file(s) with node --check"
+          echo "parsed ${#files[@]} tracked JavaScript file(s) with node --check"
       - name: Static checks (CSP integrity, links, legal freshness, a11y basics, HTML structure)
         run: python3 .ci/check.py
 
