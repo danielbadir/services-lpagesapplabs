@@ -179,11 +179,30 @@ for p in [x for x in HTML if os.path.basename(x) in ("privacy.html", "terms.html
     # root terms.html ("governed by AND CONSTRUED IN ACCORDANCE WITH the laws of ...") —
     # so the one file whose wording actually diverged was the one file the check could
     # not see. Match on "laws of" alone and read the jurisdiction that follows.
-    for m in re.finditer(r"laws of\s+([^,<.]+)", s):
+    #     SECOND WIDENING, 2026-09-06. The [^,<.] class above excluded "<", so on
+    #     sites/games/public/terms.html -- which writes
+    #     "governed by the laws of <strong>Romania (EU)</strong>" -- the "<" of
+    #     <strong> sat immediately after "laws of " and the class could not consume
+    #     a single character. finditer returned ZERO matches, so the loop body never
+    #     ran and no assertion was ever made: 8 of 9 files matched, that one did not,
+    #     and it reported clean regardless of what jurisdiction it named. Identical in
+    #     kind to the bug the paragraph above describes fixing, reintroduced by an
+    #     unrelated <strong> wrap (R34: a guard clause must be proven to match).
+    #     Fix: strip tags before matching, so markup cannot disarm the guard.
+    _plain = re.sub(r"<[^>]+>", "", s)
+    _found = 0
+    for m in re.finditer(r"laws of\s+([^,.]+)", _plain):
+        _found += 1
         named = m.group(1).strip()
         if not named.startswith("Romania (EU)"):
             fail("legal-jurisdiction", p,
                  'governing law reads "%s", not the platform-standard "Romania (EU)"' % named)
+    #     A guard that matched nothing on a file containing the phrase is BROKEN, not
+    #     clean -- that is the whole defect above, made loud (R24).
+    if "laws of" in _plain and _found == 0:
+        fail("legal-jurisdiction", p,
+             'the phrase "laws of" is present but the jurisdiction guard matched nothing '
+             '- the guard is broken, not the document')
 
 # 8 — Internal tooling must never be publicly servable. This used to be enforced
 #     by a _redirects rule that deployed correctly but never actually fired —
